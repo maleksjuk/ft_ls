@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/16 20:13:54 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/17 17:57:02 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,19 @@ typedef struct	s_options
 	int		all;
 	int		reverse;
 	int		time_order;
+	/*
+	**	служебные переменные
+	*/	
 	char	illegal;
 	char	**dir_array;
+	int		flag;
 }				t_options;
+
+typedef struct	s_recursive
+{
+	char	*address;
+	t_list	*next;
+}				t_recursive;
 
 /*
 **	options.c

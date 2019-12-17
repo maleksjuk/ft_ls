@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 19:10:54 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/16 20:07:18 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/17 17:04:53 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ void	init_options(t_options *options, int ac)
 	options->dir_array = (char **)malloc(sizeof(char *) * ac);
 	if (options->dir_array == NULL)
 		exit(1);
+	options->dir_array[ac - 1] = NULL;
+	options->flag = 0;
 }
 
 int		input_options(t_options *options, char *params)

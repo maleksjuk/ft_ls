@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:34 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/16 20:12:14 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/17 17:17:15 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ int		main(int ac, char **av)
 	int			curr_arg;
 	int			i;
 
-	curr_arg = 0;
-	i = 0;
+	curr_arg = 1;
+	i = 1;
 	options = (t_options *)malloc(sizeof(t_options) * 1);
 	init_options(options, ac);
 	if (ac > 1)
