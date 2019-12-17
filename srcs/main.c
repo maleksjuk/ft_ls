@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:34 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/17 17:17:15 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/17 20:00:45 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ int		main(int ac, char **av)
 		i = curr_arg;
 		while (curr_arg < ac)
 		{
-			if ((options->dir_array[curr_arg - i] = (char *)malloc(sizeof(char) *
-				(ft_strlen(av[curr_arg]) + 1))) == NULL)
+			if ((options->dir_array[curr_arg - i] = (char *)malloc(sizeof(char)
+				* (ft_strlen(av[curr_arg]) + 1))) == NULL)
 			{
 				perror("malloc error\n");
 				exit(1);

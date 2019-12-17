@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/17 17:57:02 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/17 19:55:03 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct	s_options
 	char	illegal;
 	char	**dir_array;
 	int		flag;
+	char	*cur_dir;
 }				t_options;
 
 typedef struct	s_recursive
@@ -52,6 +53,13 @@ int		input_options(t_options *options, char *params);
 /*
 **	ft_ls.c
 */
+int		processing(t_options *options, char *file);
 int		ft_ls(t_options *options, int num);
+
+/*
+**	lib_ls.c
+*/
+void	sort_ascii(char **array, int num);
+void	set_path(t_options *options, char *path);
 
 #endif
