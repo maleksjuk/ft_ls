@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 19:54:04 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/17 21:03:14 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/18 16:31:34 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,15 @@ void	sort_ascii(char **array, int num)
 	}
 }
 
-void	sort_info_list(t_info *list, int len)
+t_info	*set_info_list(t_info *list, int len)
+{
+	list = (t_info *)malloc(sizeof(t_info) * (len + 1));
+	if (list == NULL)
+		return (NULL);
+	return (list);
+}
+
+void	sort_info_list(t_info *list, int len, t_options *options)
 {
 	t_info	point;
 	int		i;
@@ -48,7 +56,10 @@ void	sort_info_list(t_info *list, int len)
 		i = 0;
 		while (i < len - 1)
 		{
-			if (ft_strcmp(list[i].name, list[i + 1].name) > 0)
+			// НАДО СДЕЛАТЬ ОТДЕЛЬНУЮ ФУНКЦИЮ ДЛЯ СОРТИРОВОК
+			if ((ft_strcmp(list[i].name, list[i + 1].name) > 0 &&
+				!(options->reverse)) || (ft_strcmp(list[i].name,
+				list[i + 1].name) < 0 && options->reverse))
 			{
 				point = list[i];
 				list[i] = list[i + 1];
@@ -56,6 +67,8 @@ void	sort_info_list(t_info *list, int len)
 			}
 			i++;
 		}
+		if ((int)ft_strlen(list[j].name) > options->tab_len)
+			options->tab_len = ft_strlen(list[j].name) + 1;
 		j++;
 	}
 }
