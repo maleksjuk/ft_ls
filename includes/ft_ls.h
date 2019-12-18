@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/18 20:00:47 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/18 20:40:58 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # include <string.h>
 # include <limits.h>
 # include <time.h>
+# include <pwd.h>
+# include <grp.h>
 
 typedef struct	s_options
 {
@@ -46,6 +48,8 @@ typedef struct	s_info
 	char		*name;
 	char		mode[11];
 	char		type;
+	char		*user;
+	char		*group;
 	int			nlink;
 	intmax_t	size;
 	char		*time_create;

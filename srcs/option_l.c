@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/18 20:25:05 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/18 20:43:13 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,9 @@ int		get_list_time(t_info *list, int i, struct stat about_file)
 
 int		get_list_params(char *file, t_info *list, int i)
 {
-	struct stat	about_file;
+	struct stat		about_file;
+	struct passwd	*uid;
+	struct group	*gid;
 
 	if (stat(file, &about_file))
 	{
@@ -70,14 +72,16 @@ int		get_list_params(char *file, t_info *list, int i)
 	list[i].nlink = (int)about_file.st_nlink;
 	get_list_mode(list, i, about_file.st_mode);
 	get_list_time(list, i, about_file);
+	uid = getpwuid(about_file.st_uid);
+	list[i].user = ft_strdup(uid->pw_name);
+	gid = getgrgid(about_file.st_gid);
+	list[i].group = ft_strdup(gid->gr_name);
 	return (0);
 }
 
 void	print_list(t_info *list, int i)
 {
-	ft_printf("%s ", list[i].mode);
-	ft_printf("%2i\t", list[i].nlink);
-	ft_printf("%d\t", list[i].size);
-	ft_printf("%s ", list[i].time_modif);
-	ft_printf("%s\n", list[i].name);
+	ft_printf("%s %2i\t%s\t%s\t%d\t%s %s\n", list[i].mode, list[i].nlink,
+		list[i].user, list[i].group, list[i].size, list[i].time_modif,
+		list[i].name);
 }
