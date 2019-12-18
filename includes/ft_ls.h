@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/18 16:08:43 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/18 20:00:47 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 # include <dirent.h>
 # include <errno.h>
 # include <string.h>
+# include <limits.h>
+# include <time.h>
 
 typedef struct	s_options
 {
@@ -41,10 +43,14 @@ typedef struct	s_options
 
 typedef struct	s_info
 {
-	char	*name;
-	char	mode;
-	char	type;
-	char	time;
+	char		*name;
+	char		mode[11];
+	char		type;
+	int			nlink;
+	intmax_t	size;
+	char		*time_create;
+	char		*time_modif;
+	char		*time_active;
 }				t_info;
 
 /*
@@ -74,5 +80,11 @@ void	set_path(t_options *options, char *path);
 **	option_R.c
 */
 int		recursive(t_options *options, char *file);
+
+/*
+**	option_l.c
+*/
+int		get_list_params(char *file, t_info *list, int i);
+void	print_list(t_info *list, int i);
 
 #endif

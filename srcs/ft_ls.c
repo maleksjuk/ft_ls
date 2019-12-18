@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/18 16:43:08 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/18 19:13:20 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int		reading(t_info *list, char *file)
 	dir = NULL;
 	dir_read = NULL;
 	i = 0;
-	if ((dir = opendir(file)) == NULL)	// begin read this folder
+	if ((dir = opendir(file)) == NULL)
 	{
 		perror("opendir\n");
 		exit(1);
@@ -46,6 +46,8 @@ int		reading(t_info *list, char *file)
 	i = 0;
 	while (dir_read != NULL)
 	{
+		if (get_list_params(dir_read->d_name, list, i))
+			return (0);
 		list[i].name = ft_strdup(dir_read->d_name);
 		i++;
 		dir_read = readdir(dir);
@@ -67,7 +69,7 @@ int		printing(t_info *list, t_options *options, struct stat about)
 		if (list[i].name[0] != '.' || (list[i].name[0] == '.' && options->all))
 		{
 			if (options->list)
-				ft_printf("%s\n", list[i].name);
+				print_list(list, i);//ft_printf("%d\t%s\n", list[i].size, list[i].name);
 			else
 				ft_printf("%-*s", options->tab_len, list[i].name);
 		}
