@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/18 19:13:20 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/18 21:10:54 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int		final_ls(t_options *options)
 	return (0);
 }
 
-int		reading(t_info *list, char *file)
+int		reading(t_info *list, char *file, t_options *options)
 {
 	DIR				*dir;
 	struct dirent	*dir_read;
@@ -46,8 +46,12 @@ int		reading(t_info *list, char *file)
 	i = 0;
 	while (dir_read != NULL)
 	{
-		if (get_list_params(dir_read->d_name, list, i))
+		// НАДО ПЕРЕДАВАТЬ ПУТЬ ДО ФАЙЛА, А НЕ ИМЯ ФАЙЛА
+		set_path(options, dir_read->d_name);
+		if (get_list_params(options->cur_dir, list, i))
 			return (0);
+		options->cur_dir[ft_strlen(options->cur_dir) -
+					ft_strlen(dir_read->d_name) - 1] = '\0';
 		list[i].name = ft_strdup(dir_read->d_name);
 		i++;
 		dir_read = readdir(dir);
@@ -69,7 +73,7 @@ int		printing(t_info *list, t_options *options, struct stat about)
 		if (list[i].name[0] != '.' || (list[i].name[0] == '.' && options->all))
 		{
 			if (options->list)
-				print_list(list, i);//ft_printf("%d\t%s\n", list[i].size, list[i].name);
+				print_list(list, i);
 			else
 				ft_printf("%-*s", options->tab_len, list[i].name);
 		}
@@ -96,7 +100,7 @@ int		processing(t_options *options, char *file)
 		perror("list error\n");
 		exit(1);
 	}
-	if ((i = reading(list, file)) == 0)
+	if ((i = reading(list, file, options)) == 0)
 		return (1);
 	sort_info_list(list, i, options);
 	printing(list, options, about);
@@ -121,7 +125,8 @@ int		ft_ls(t_options *options, int num)
 			tmp = options->cur_dir;
 			options->cur_dir = ft_strdup(options->dir_array[i]);
 			free(tmp);
-			processing(options, options->dir_array[i++]);
+			processing(options, options->dir_array[i]);
+			i++;
 		}
 	}
 	else

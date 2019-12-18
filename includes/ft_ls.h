@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/18 20:40:58 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/18 21:08:48 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int		input_options(t_options *options, char *params);
 **	ft_ls.c
 */
 int		final_ls(t_options *options);
-int		reading(t_info *list, char *file);
+int		reading(t_info *list, char *file, t_options *options);
 int		printing(t_info *list, t_options *options, struct stat about);
 int		processing(t_options *options, char *file);
 int		ft_ls(t_options *options, int num);
