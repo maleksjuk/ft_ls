@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/23 20:42:14 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/23 20:52:51 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ int		processing(t_options *options, char *file)
 		return (1);
 	set_null_tab_len(options);
 	sort_info_list(list, i, options);
+	update_value_tab_len(options, list, i);
 	printing(list, options, about);
 	if (options->recursive)
 		recursive(options, options->cur_dir);

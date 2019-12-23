@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 19:54:04 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/23 19:19:40 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/23 21:11:06 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,23 +44,64 @@ t_info	*set_info_list(t_info *list, int len)
 	return (list);
 }
 
-void	update_value_tab_len(t_options *options, t_info list)
+void	update_value_tab_len(t_options *options, t_info *list, int len)
 {
 	char	*nlink;
 	char	*size;
+	int		i;
 
-	nlink = ft_itoa(list.nlink);
-	if ((int)ft_strlen(nlink) > options->tab_len[1])
-		options->tab_len[1] = ft_strlen(nlink) + 1;
-	if ((int)ft_strlen(list.user) > options->tab_len[2])
-		options->tab_len[2] = ft_strlen(list.user) + 1;
-	if ((int)ft_strlen(list.group) > options->tab_len[3])
-		options->tab_len[3] = ft_strlen(list.group) + 1;
-	size = ft_itoa(list.size);
-	if ((int)ft_strlen(size) > options->tab_len[4])
-		options->tab_len[4] = ft_strlen(size) + 1;
-	if ((int)ft_strlen(list.name) > options->tab_len[6])
-		options->tab_len[6] = ft_strlen(list.name) + 1;
+	i = 0;
+	while (i < len)
+	{
+		if (options->all || list[i].name[0] != '.')
+		{
+			nlink = ft_itoa(list[i].nlink);
+			if ((int)ft_strlen(nlink) > options->tab_len[1])
+				options->tab_len[1] = ft_strlen(nlink) + 1;
+			if ((int)ft_strlen(list[i].user) > options->tab_len[2])
+				options->tab_len[2] = ft_strlen(list[i].user) + 1;
+			if ((int)ft_strlen(list[i].group) > options->tab_len[3])
+				options->tab_len[3] = ft_strlen(list[i].group) + 1;
+			size = ft_itoa(list[i].size);
+			if ((int)ft_strlen(size) > options->tab_len[4])
+				options->tab_len[4] = ft_strlen(size) + 1;
+			if ((int)ft_strlen(list[i].name) > options->tab_len[6])
+				options->tab_len[6] = ft_strlen(list[i].name) + 1;
+		}
+		i++;
+	}
+}
+
+int		condition_sort(t_info *list, int i, t_options *options)
+{
+	if (!(options->time_order))
+	{
+		if (!(options->reverse))
+		{
+			if (ft_strcmp(list[i].name, list[i + 1].name) > 0)
+				return (1);
+		}
+		else
+		{
+			if (ft_strcmp(list[i].name, list[i + 1].name) < 0)
+				return (1);
+		}
+	}
+	else
+	{
+		if (!(options->reverse))
+		{
+			if (list[i].time_modif_digit < list[i + 1].time_modif_digit)
+				return (1);
+		}
+		else
+		{
+			if (list[i].time_modif_digit > list[i + 1].time_modif_digit)
+				return (1);
+		}
+	}
+	
+	return (0);
 }
 
 void	sort_info_list(t_info *list, int len, t_options *options)
@@ -76,9 +117,7 @@ void	sort_info_list(t_info *list, int len, t_options *options)
 		while (i < len - 1)
 		{
 			// НАДО СДЕЛАТЬ ОТДЕЛЬНУЮ ФУНКЦИЮ ДЛЯ СОРТИРОВОК
-			if ((ft_strcmp(list[i].name, list[i + 1].name) > 0 &&
-				!(options->reverse)) || (ft_strcmp(list[i].name,
-				list[i + 1].name) < 0 && options->reverse))
+			if (condition_sort(list, i, options))
 			{
 				point = list[i];
 				list[i] = list[i + 1];
@@ -86,10 +125,6 @@ void	sort_info_list(t_info *list, int len, t_options *options)
 			}
 			i++;
 		}
-		// if ((int)ft_strlen(list[j].name) > options->tab_len)
-		// 	options->tab_len = ft_strlen(list[j].name) + 1;
-		if (options->all || list[j].name[0] != '.')
-			update_value_tab_len(options, list[j]);
 		j++;
 	}
 }

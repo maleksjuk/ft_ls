@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/23 20:40:11 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/23 21:04:38 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,11 @@ typedef struct	s_info
 	int			nlink;
 	intmax_t	size;
 	char		*time_create;
+	long		time_create_digit;
 	char		*time_modif;
+	long		time_modif_digit;
 	char		*time_active;
+	long		time_active_digit;
 	intmax_t	total;
 }				t_info;
 
@@ -78,6 +81,7 @@ int		ft_ls(t_options *options, int num);
 */
 void	sort_ascii(char **array, int num);
 t_info	*set_info_list(t_info *list, int len);
+void	update_value_tab_len(t_options *options, t_info *list, int len);
 void	sort_info_list(t_info *list, int len, t_options *options);
 void	set_path(t_options *options, char *path, char *file);
 void	set_null_tab_len(t_options *options);
