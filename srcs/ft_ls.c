@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/23 18:59:08 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/23 20:42:14 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ int		printing(t_info *list, t_options *options, struct stat about)
 	while (options->tab_len[6] % 8 != 0)
 		options->tab_len[6]++;
 	i = 0;
+	if (options->list)
+		ft_printf("total %lld\n", list[0].total);
 	while (i < (int)about.st_nlink)
 	{
 		if (list[i].name[0] != '.' || (list[i].name[0] == '.' && options->all))
@@ -74,7 +76,7 @@ int		printing(t_info *list, t_options *options, struct stat about)
 			if (options->list)
 				print_list(list, i, options);
 			else
-				ft_printf("%-*s", options->tab_len, list[i].name);
+				ft_printf("%-*s", options->tab_len[6], list[i].name);
 		}
 		i++;
 	}

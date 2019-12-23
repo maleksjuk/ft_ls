@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/23 19:07:46 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/23 20:42:06 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,10 @@ int		get_list_params(char *file, t_info *list, int i)
 	list[i].user = ft_strdup(uid->pw_name);
 	gid = getgrgid(about_file.st_gid);
 	list[i].group = ft_strdup(gid->gr_name);
+	if (i == 0)
+		list[0].total = 0;
+	else if (i > 1)
+		list[0].total = list[0].total + (intmax_t)about_file.st_blocks;
 	return (0);
 }
 

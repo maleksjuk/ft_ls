@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/23 18:58:33 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/23 20:40:11 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct	s_info
 	char		*time_create;
 	char		*time_modif;
 	char		*time_active;
+	intmax_t	total;
 }				t_info;
 
 /*
