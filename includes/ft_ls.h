@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/18 21:08:48 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/23 18:58:33 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef struct	s_options
 	char	**dir_array;
 	int		flag;
 	char	*cur_dir;
-	int		tab_len;
+	int		tab_len[7];
 }				t_options;
 
 typedef struct	s_info
@@ -78,7 +78,8 @@ int		ft_ls(t_options *options, int num);
 void	sort_ascii(char **array, int num);
 t_info	*set_info_list(t_info *list, int len);
 void	sort_info_list(t_info *list, int len, t_options *options);
-void	set_path(t_options *options, char *path);
+void	set_path(t_options *options, char *path, char *file);
+void	set_null_tab_len(t_options *options);
 
 /*
 **	option_R.c
@@ -89,6 +90,6 @@ int		recursive(t_options *options, char *file);
 **	option_l.c
 */
 int		get_list_params(char *file, t_info *list, int i);
-void	print_list(t_info *list, int i);
+void	print_list(t_info *list, int i, t_options *options);
 
 #endif

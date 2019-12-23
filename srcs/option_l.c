@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/18 20:43:13 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/23 19:07:46 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int		get_list_params(char *file, t_info *list, int i)
 
 	if (stat(file, &about_file))
 	{
-		perror("stat\n");
+		perror("stat -l");
 		return(1);
 	}
 	list[i].size = (intmax_t)about_file.st_size;
@@ -79,9 +79,14 @@ int		get_list_params(char *file, t_info *list, int i)
 	return (0);
 }
 
-void	print_list(t_info *list, int i)
+void	print_list(t_info *list, int i, t_options *options)
 {
-	ft_printf("%s %2i\t%s\t%s\t%d\t%s %s\n", list[i].mode, list[i].nlink,
-		list[i].user, list[i].group, list[i].size, list[i].time_modif,
-		list[i].name);
+	ft_printf("%s %*i %*s %*s %*d %*s %-*s\n",
+		list[i].mode, 
+		options->tab_len[1], list[i].nlink,
+		options->tab_len[2] - 1, list[i].user,
+		options->tab_len[3], list[i].group,
+		options->tab_len[4], list[i].size,
+		options->tab_len[5], list[i].time_modif,
+		options->tab_len[6], list[i].name);
 }

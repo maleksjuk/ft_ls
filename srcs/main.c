@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:34 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/17 20:00:45 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/19 16:33:35 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int		main(int ac, char **av)
 			if ((options->dir_array[curr_arg - i] = (char *)malloc(sizeof(char)
 				* (ft_strlen(av[curr_arg]) + 1))) == NULL)
 			{
-				perror("malloc error\n");
+				perror("malloc error");
 				exit(1);
 			}
 			ft_strcpy(options->dir_array[curr_arg - i], av[curr_arg]);

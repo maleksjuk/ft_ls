@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 19:10:54 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/18 19:22:24 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/23 18:02:58 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	init_options(t_options *options, int ac)
 	options->dir_array[ac - 1] = NULL;
 	options->flag = 0;
 	options->cur_dir = ft_strdup(".\0");
-	options->tab_len = 0;
+	set_null_tab_len(options);
 }
 
 int		input_options(t_options *options, char *params)

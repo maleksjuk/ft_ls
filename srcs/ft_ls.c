@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/18 21:10:54 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/23 18:59:08 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,15 +39,14 @@ int		reading(t_info *list, char *file, t_options *options)
 	i = 0;
 	if ((dir = opendir(file)) == NULL)
 	{
-		perror("opendir\n");
+		perror("opendir");
 		exit(1);
 	}
 	dir_read = readdir(dir);
 	i = 0;
 	while (dir_read != NULL)
 	{
-		// НАДО ПЕРЕДАВАТЬ ПУТЬ ДО ФАЙЛА, А НЕ ИМЯ ФАЙЛА
-		set_path(options, dir_read->d_name);
+		set_path(options, NULL, dir_read->d_name);
 		if (get_list_params(options->cur_dir, list, i))
 			return (0);
 		options->cur_dir[ft_strlen(options->cur_dir) -
@@ -57,7 +56,7 @@ int		reading(t_info *list, char *file, t_options *options)
 		dir_read = readdir(dir);
 	}
 	if (closedir(dir) == -1)
-		perror("closedir\n");
+		perror("closedir");
 	return (i);
 }
 
@@ -65,15 +64,15 @@ int		printing(t_info *list, t_options *options, struct stat about)
 {
 	int	i;
 
-	while (options->tab_len % 8 != 0)
-		options->tab_len++;
+	while (options->tab_len[6] % 8 != 0)
+		options->tab_len[6]++;
 	i = 0;
 	while (i < (int)about.st_nlink)
 	{
 		if (list[i].name[0] != '.' || (list[i].name[0] == '.' && options->all))
 		{
 			if (options->list)
-				print_list(list, i);
+				print_list(list, i, options);
 			else
 				ft_printf("%-*s", options->tab_len, list[i].name);
 		}
@@ -92,20 +91,21 @@ int		processing(t_options *options, char *file)
 	list = NULL;
 	if (stat(file, &about))
 	{
-		perror("stat\n");
+		perror("stat");
 		exit(1);
 	}
 	if ((list = set_info_list(list, about.st_nlink)) == NULL)
 	{
-		perror("list error\n");
+		perror("list error");
 		exit(1);
 	}
-	if ((i = reading(list, file, options)) == 0)
+	if ((i = reading(list, options->cur_dir, options)) == 0)
 		return (1);
+	set_null_tab_len(options);
 	sort_info_list(list, i, options);
 	printing(list, options, about);
 	if (options->recursive)
-		recursive(options, file);
+		recursive(options, options->cur_dir);
 	return (0);
 }
 
@@ -130,6 +130,9 @@ int		ft_ls(t_options *options, int num)
 		}
 	}
 	else
+	{
+		options->cur_dir = ft_strdup(".");
 		processing(options, "./");
+	}
 	return (final_ls(options));
 }
