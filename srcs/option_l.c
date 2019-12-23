@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/23 21:19:30 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/23 22:03:03 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,9 @@
 int		get_list_mode(t_info *list, int i, mode_t mode)
 {
 	list[i].mode[0] = S_ISDIR(mode) ? 'd' : (S_ISLNK(mode) ? 'l' : '-');
+	list[i].mode[0] = S_ISCHR(mode) ? 'c' : (S_ISBLK(mode) ? 'b' : '-');
+	list[i].mode[0] = S_ISFIFO(mode) ? 'p' : (S_ISSOCK(mode) ? 's' : '-');
+
 	list[i].mode[10] = '\0';
 	list[i].mode[1] = mode & S_IRUSR ? 'r' : '-';
 	list[i].mode[2] = mode & S_IWUSR ? 'w' : '-';
@@ -28,22 +31,39 @@ int		get_list_mode(t_info *list, int i, mode_t mode)
 	return (0);
 }
 
-void	set_format_date(char *time)
+void	set_format_date(char *date)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
+	char	*current;
+	long	cur_time;
+	char	*year;
 
 	i = -1;
 	while (i++ < 6)
-		time[i] = time[4 + i];
+		date[i] = date[4 + i];
+	cur_time = time(NULL);
+	current = ft_strdup(ctime(&cur_time));
+	year = ft_strdup(date);
+	j = -1;
+	while (++j < 4)
+	{
+		current[j] = current[20 + j];
+		year[j] = year[20 + j];
+	}
+	current[j] = '\0';
+	year[j] = '\0';
 	j = 0;
-	if (1 > 0)					// если год текущий
+	if (!ft_strcmp(current, year))
 		while (j < 5)
-			time[i++] = time[11 + j++];
+			date[i++] = date[11 + j++];
 	else
+	{
+		date[i++] = ' ';
 		while (j < 4)
-			time[i++] = time[20 + j++];
-	time[i] = '\0';
+			date[i++] = date[20 + j++];
+	}
+	date[i] = '\0';
 }
 
 int		get_list_time(t_info *list, int i, struct stat about_file)
