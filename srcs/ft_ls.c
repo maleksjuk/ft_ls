@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/23 22:01:27 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/24 19:35:01 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,12 @@ int		reading(t_info *list, char *file, t_options *options)
 	i = 0;
 	while (dir_read != NULL)
 	{
+		list[i].name = ft_strdup(dir_read->d_name);
 		set_path(options, NULL, dir_read->d_name);
 		if (get_list_params(options->cur_dir, list, i))
 			return (0);
 		options->cur_dir[ft_strlen(options->cur_dir) -
 					ft_strlen(dir_read->d_name) - 1] = '\0';
-		list[i].name = ft_strdup(dir_read->d_name);
 		i++;
 		dir_read = readdir(dir);
 	}
@@ -60,7 +60,7 @@ int		reading(t_info *list, char *file, t_options *options)
 	return (i);
 }
 
-int		printing(t_info *list, t_options *options, struct stat about)
+int		printing(t_info *list, t_options *options)
 {
 	int	i;
 
@@ -68,8 +68,8 @@ int		printing(t_info *list, t_options *options, struct stat about)
 		options->tab_len[6]++;
 	i = 0;
 	if (options->list)
-		ft_printf("total %lld\n", list[0].total);
-	while (i < (int)about.st_nlink)
+		ft_printf("total %lld\n", options->all ? list[0].total : list[0].total_no_all);
+	while (list[i].name)
 	{
 		if (list[i].name[0] != '.' || (list[i].name[0] == '.' && options->all))
 		{
@@ -106,7 +106,7 @@ int		processing(t_options *options, char *file)
 	set_null_tab_len(options);
 	sort_info_list(list, i, options);
 	update_value_tab_len(options, list, i);
-	printing(list, options, about);
+	printing(list, options);
 	if (options->recursive)
 		recursive(options, options->cur_dir);
 	return (0);

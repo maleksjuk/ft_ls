@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/23 22:03:03 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/24 23:29:24 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,20 +14,27 @@
 
 int		get_list_mode(t_info *list, int i, mode_t mode)
 {
-	list[i].mode[0] = S_ISDIR(mode) ? 'd' : (S_ISLNK(mode) ? 'l' : '-');
-	list[i].mode[0] = S_ISCHR(mode) ? 'c' : (S_ISBLK(mode) ? 'b' : '-');
-	list[i].mode[0] = S_ISFIFO(mode) ? 'p' : (S_ISSOCK(mode) ? 's' : '-');
-
-	list[i].mode[10] = '\0';
+	list[i].mode[0] = S_ISSOCK(mode) ? 's' :
+		(S_ISLNK(mode) ? 'l' :
+		(S_ISBLK(mode) ? 'b' :
+		(S_ISDIR(mode) ? 'd' :
+		(S_ISCHR(mode) ? 'c' :
+		(S_ISFIFO(mode) ? 'p' :
+		'-')))));
+	list[i].mode[11] = '\0';
 	list[i].mode[1] = mode & S_IRUSR ? 'r' : '-';
 	list[i].mode[2] = mode & S_IWUSR ? 'w' : '-';
-	list[i].mode[3] = mode & S_IXUSR ? 'x' : '-';
+	list[i].mode[3] = (mode & S_ISUID) && (mode & S_IXUSR) ? 's' :
+		(mode & S_ISUID ? 'S' : (mode & S_IXUSR ? 'x' : '-'));
 	list[i].mode[4] = mode & S_IRGRP ? 'r' : '-';
 	list[i].mode[5] = mode & S_IWGRP ? 'w' : '-';
-	list[i].mode[6] = mode & S_IXGRP ? 'x' : '-';
+	list[i].mode[6] = (mode & S_ISGID) && (mode & S_IXGRP) ? 's' :
+		(mode & S_ISGID ? 'S' : (mode & S_IXGRP ? 'x' : '-'));
 	list[i].mode[7] = mode & S_IROTH ? 'r' : '-';
 	list[i].mode[8] = mode & S_IWOTH ? 'w' : '-';
-	list[i].mode[9] = mode & S_IXOTH ? 'x' : '-';
+	list[i].mode[9] = (mode & S_ISVTX) && (mode & S_IXOTH) ? 't' :
+		(mode & S_ISVTX ? 'T' : (mode & S_IXOTH ? 'x' : '-'));
+	list[i].mode[10] = ' ';
 	return (0);
 }
 
@@ -100,18 +107,25 @@ int		get_list_params(char *file, t_info *list, int i)
 	gid = getgrgid(about_file.st_gid);
 	list[i].group = ft_strdup(gid->gr_name);
 	if (i == 0)
+	{
 		list[0].total = 0;
+		list[0].total_no_all = 0;
+	}
 	else if (i > 1)
+	{
 		list[0].total = list[0].total + (intmax_t)about_file.st_blocks;
+		if (list[i].name[0] != '.')
+			list[0].total_no_all = list[0].total_no_all + (intmax_t)about_file.st_blocks;
+	}
 	return (0);
 }
 
 void	print_list(t_info *list, int i, t_options *options)
 {
-	ft_printf("%s %*i %*s %*s %*d %*s %s\n",
+	ft_printf("%s %*i %-*s  %-*s  %*d %*s %s\n",
 		list[i].mode, 
 		options->tab_len[1], list[i].nlink,
-		options->tab_len[2] - 1, list[i].user,
+		options->tab_len[2], list[i].user,
 		options->tab_len[3], list[i].group,
 		options->tab_len[4], list[i].size,
 		options->tab_len[5], list[i].time_modif,

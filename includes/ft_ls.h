@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/23 21:04:38 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/24 19:31:27 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct	s_options
 typedef struct	s_info
 {
 	char		*name;
-	char		mode[11];
+	char		mode[12];
 	char		type;
 	char		*user;
 	char		*group;
@@ -59,6 +59,7 @@ typedef struct	s_info
 	char		*time_active;
 	long		time_active_digit;
 	intmax_t	total;
+	intmax_t	total_no_all;
 }				t_info;
 
 /*
@@ -72,7 +73,7 @@ int		input_options(t_options *options, char *params);
 */
 int		final_ls(t_options *options);
 int		reading(t_info *list, char *file, t_options *options);
-int		printing(t_info *list, t_options *options, struct stat about);
+int		printing(t_info *list, t_options *options);
 int		processing(t_options *options, char *file);
 int		ft_ls(t_options *options, int num);
 

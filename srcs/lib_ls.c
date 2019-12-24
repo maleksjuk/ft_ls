@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 19:54:04 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/23 21:11:06 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/24 17:58:15 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,14 @@ void	update_value_tab_len(t_options *options, t_info *list, int len)
 		{
 			nlink = ft_itoa(list[i].nlink);
 			if ((int)ft_strlen(nlink) > options->tab_len[1])
-				options->tab_len[1] = ft_strlen(nlink) + 1;
+				options->tab_len[1] = ft_strlen(nlink);
 			if ((int)ft_strlen(list[i].user) > options->tab_len[2])
-				options->tab_len[2] = ft_strlen(list[i].user) + 1;
+				options->tab_len[2] = ft_strlen(list[i].user);
 			if ((int)ft_strlen(list[i].group) > options->tab_len[3])
-				options->tab_len[3] = ft_strlen(list[i].group) + 1;
+				options->tab_len[3] = ft_strlen(list[i].group);
 			size = ft_itoa(list[i].size);
 			if ((int)ft_strlen(size) > options->tab_len[4])
-				options->tab_len[4] = ft_strlen(size) + 1;
+				options->tab_len[4] = ft_strlen(size);
 			if ((int)ft_strlen(list[i].name) > options->tab_len[6])
 				options->tab_len[6] = ft_strlen(list[i].name) + 1;
 		}
@@ -155,7 +155,7 @@ void	set_path(t_options *options, char *path, char *file)
 
 void	set_null_tab_len(t_options *options)
 {
-	options->tab_len[0] = 10;
+	options->tab_len[0] = 11;
 	options->tab_len[1] = 0;
 	options->tab_len[2] = 0;
 	options->tab_len[3] = 0;
