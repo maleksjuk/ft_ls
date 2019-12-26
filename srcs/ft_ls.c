@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/24 19:35:01 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/26 15:12:57 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int		reading(t_info *list, char *file, t_options *options)
 	DIR				*dir;
 	struct dirent	*dir_read;
 	int				i;
+	char			*tmp;
 
 	dir = NULL;
 	dir_read = NULL;
@@ -46,7 +47,9 @@ int		reading(t_info *list, char *file, t_options *options)
 	i = 0;
 	while (dir_read != NULL)
 	{
+		tmp = list[i].name;
 		list[i].name = ft_strdup(dir_read->d_name);
+		// free(tmp);
 		set_path(options, NULL, dir_read->d_name);
 		if (get_list_params(options->cur_dir, list, i))
 			return (0);
@@ -60,7 +63,7 @@ int		reading(t_info *list, char *file, t_options *options)
 	return (i);
 }
 
-int		printing(t_info *list, t_options *options)
+int		printing(t_info *list, t_options *options, int len)
 {
 	int	i;
 
@@ -69,8 +72,10 @@ int		printing(t_info *list, t_options *options)
 	i = 0;
 	if (options->list)
 		ft_printf("total %lld\n", options->all ? list[0].total : list[0].total_no_all);
-	while (list[i].name)
+	while (i < len)
 	{
+		if (list[i].name[0] == '\0')
+			break ;
 		if (list[i].name[0] != '.' || (list[i].name[0] == '.' && options->all))
 		{
 			if (options->list)
@@ -88,7 +93,7 @@ int		processing(t_options *options, char *file)
 {
 	t_info			*list;
 	struct stat		about;
-	int				i;
+	int				count;
 
 	list = NULL;
 	if (stat(file, &about))
@@ -101,12 +106,12 @@ int		processing(t_options *options, char *file)
 		perror("list error");
 		exit(1);
 	}
-	if ((i = reading(list, options->cur_dir, options)) == 0)
+	if ((count = reading(list, options->cur_dir, options)) == 0)
 		return (1);
 	set_null_tab_len(options);
-	sort_info_list(list, i, options);
-	update_value_tab_len(options, list, i);
-	printing(list, options);
+	sort_info_list(list, count, options);
+	update_value_tab_len(options, list, count);
+	printing(list, options, count);
 	if (options->recursive)
 		recursive(options, options->cur_dir);
 	return (0);

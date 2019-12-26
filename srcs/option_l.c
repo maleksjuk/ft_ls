@@ -6,11 +6,29 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/24 23:29:24 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/26 15:56:44 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_ls.h"
+
+void	check_link(t_info *list, int i)
+{
+	char	*bufer;
+	int		bufsize;
+	char	*string;
+
+	bufsize = 1000;
+	bufer = (char *)malloc(bufsize);
+	string = ft_strjoin("/\0", list[i].name);
+	if (readlink(string, bufer, bufsize) > 0)
+	{
+		list[i].mode[0] = 'l';
+		list[i].path_link = ft_strdup(bufer);
+		list[i].flag_link = 1;
+	}
+	free(bufer);
+}
 
 int		get_list_mode(t_info *list, int i, mode_t mode)
 {
@@ -21,6 +39,7 @@ int		get_list_mode(t_info *list, int i, mode_t mode)
 		(S_ISCHR(mode) ? 'c' :
 		(S_ISFIFO(mode) ? 'p' :
 		'-')))));
+	check_link(list, i);
 	list[i].mode[11] = '\0';
 	list[i].mode[1] = mode & S_IRUSR ? 'r' : '-';
 	list[i].mode[2] = mode & S_IWUSR ? 'w' : '-';
@@ -100,6 +119,7 @@ int		get_list_params(char *file, t_info *list, int i)
 	}
 	list[i].size = (intmax_t)about_file.st_size;
 	list[i].nlink = (int)about_file.st_nlink;
+	list[i].flag_link = 0;
 	get_list_mode(list, i, about_file.st_mode);
 	get_list_time(list, i, about_file);
 	uid = getpwuid(about_file.st_uid);
@@ -111,7 +131,7 @@ int		get_list_params(char *file, t_info *list, int i)
 		list[0].total = 0;
 		list[0].total_no_all = 0;
 	}
-	else if (i > 1)
+	else if (i > 1 && !list[i].flag_link)
 	{
 		list[0].total = list[0].total + (intmax_t)about_file.st_blocks;
 		if (list[i].name[0] != '.')
@@ -122,7 +142,7 @@ int		get_list_params(char *file, t_info *list, int i)
 
 void	print_list(t_info *list, int i, t_options *options)
 {
-	ft_printf("%s %*i %-*s  %-*s  %*d %*s %s\n",
+	ft_printf("%s %*i %-*s  %-*s  %*d %*s %s",
 		list[i].mode, 
 		options->tab_len[1], list[i].nlink,
 		options->tab_len[2], list[i].user,
@@ -130,4 +150,7 @@ void	print_list(t_info *list, int i, t_options *options)
 		options->tab_len[4], list[i].size,
 		options->tab_len[5], list[i].time_modif,
 		list[i].name);
+	if (list[i].flag_link)
+		ft_printf(" -> %s", list[i].path_link);
+	ft_printf("\n");
 }

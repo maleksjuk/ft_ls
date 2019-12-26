@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 19:54:04 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/24 17:58:15 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/26 14:24:17 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,14 @@ void	sort_ascii(char **array, int num)
 
 t_info	*set_info_list(t_info *list, int len)
 {
+	int	i;
+
 	list = (t_info *)malloc(sizeof(t_info) * (len + 1));
 	if (list == NULL)
 		return (NULL);
+	i = 0;
+	while (i < len)
+		list[i++].name = ft_strdup("\0");
 	return (list);
 }
 
