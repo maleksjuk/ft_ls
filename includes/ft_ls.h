@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/26 15:47:28 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/27 21:24:03 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct	s_options
 	char	illegal;
 	char	**dir_array;
 	int		flag;
+	int		flag_list;
 	char	*cur_dir;
 	int		tab_len[7];
 }				t_options;

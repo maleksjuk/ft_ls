@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/27 18:16:13 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/27 21:35:47 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,33 +28,40 @@ int		final_ls(t_options *options)
 	return (0);
 }
 
+int		reading_no_dir(t_info *list, char name[1024], t_options *options, int i)
+{
+	char	*tmp;
+
+	tmp = list[i].name;
+	list[i].name = ft_strdup(name);
+	// free(tmp);
+	set_path(options, NULL, name);
+	if (get_list_params(options->cur_dir, list, i))
+		return (0);
+	options->cur_dir[ft_strlen(options->cur_dir) - ft_strlen(name) - 1] = '\0';
+	return (0);
+}
+
 int		reading(t_info *list, char *file, t_options *options)
 {
 	DIR				*dir;
 	struct dirent	*dir_read;
 	int				i;
-	char			*tmp;
+//	char			*tmp;
 
 	dir = NULL;
 	dir_read = NULL;
 	i = 0;
 	if ((dir = opendir(file)) == NULL)
 	{
-		perror("opendir");
+		perror("opendir_reading");
 		exit(1);
 	}
 	dir_read = readdir(dir);
 	i = 0;
 	while (dir_read != NULL)
 	{
-		tmp = list[i].name;
-		list[i].name = ft_strdup(dir_read->d_name);
-		// free(tmp);
-		set_path(options, NULL, dir_read->d_name);
-		if (get_list_params(options->cur_dir, list, i))
-			return (0);
-		options->cur_dir[ft_strlen(options->cur_dir) -
-					ft_strlen(dir_read->d_name) - 1] = '\0';
+		reading_no_dir(list, dir_read->d_name, options, i);
 		i++;
 		dir_read = readdir(dir);
 	}
@@ -70,7 +77,7 @@ int		printing(t_info *list, t_options *options, int len)
 	while (options->tab_len[6] % 8 != 0)
 		options->tab_len[6]++;
 	i = 0;
-	if (options->list)
+	if (options->list && !options->flag_list)
 		ft_printf("total %lld\n", options->all ? list[0].total : list[0].total_no_all);
 	while (i < len)
 	{
@@ -106,7 +113,16 @@ int		processing(t_options *options, char *file)
 		perror("list error");
 		exit(1);
 	}
-	if ((count = reading(list, options->cur_dir, options)) == 0)
+	if (!S_ISDIR(about.st_mode))
+	{
+		free(options->cur_dir);
+		options->cur_dir = ft_strdup("./\0");
+		if (reading_no_dir(list, file, options, 0))
+			return (0);
+		count = 1;
+		options->flag_list = 1;
+	}
+	else if ((count = reading(list, options->cur_dir, options)) == 0)
 		return (1);
 	set_null_tab_len(options);
 	sort_info_list(list, count, options);
