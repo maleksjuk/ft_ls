@@ -6,24 +6,22 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/26 15:56:44 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/27 20:10:18 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_ls.h"
 
-void	check_link(t_info *list, int i)
+void	path_link(t_info *list, int i, char *file)
 {
 	char	*bufer;
 	int		bufsize;
-	char	*string;
 
-	bufsize = 1000;
+	list[i].mode[0] = 'l';
+	bufsize = 1024;					// CHANGE SIZE
 	bufer = (char *)malloc(bufsize);
-	string = ft_strjoin("/\0", list[i].name);
-	if (readlink(string, bufer, bufsize) > 0)
+	if (readlink(file, bufer, bufsize) > 0)		// change to while
 	{
-		list[i].mode[0] = 'l';
 		list[i].path_link = ft_strdup(bufer);
 		list[i].flag_link = 1;
 	}
@@ -39,7 +37,6 @@ int		get_list_mode(t_info *list, int i, mode_t mode)
 		(S_ISCHR(mode) ? 'c' :
 		(S_ISFIFO(mode) ? 'p' :
 		'-')))));
-	check_link(list, i);
 	list[i].mode[11] = '\0';
 	list[i].mode[1] = mode & S_IRUSR ? 'r' : '-';
 	list[i].mode[2] = mode & S_IWUSR ? 'w' : '-';
@@ -106,37 +103,57 @@ int		get_list_time(t_info *list, int i, struct stat about_file)
 	return (0);
 }
 
+int		total_counter(t_info *list, struct stat about, int i)
+{
+	if (i == 0)
+	{
+		list[0].total = 0;
+		list[0].total_no_all = 0;
+	}
+	else if (i > 1)
+	{
+		list[0].total = list[0].total + (intmax_t)about.st_blocks;
+		if (list[i].name[0] != '.')
+			list[0].total_no_all = list[0].total_no_all + (intmax_t)about.st_blocks;
+	}
+	return (0);
+}
+
+int		get_list_params_link(t_info *list, int i, struct stat about_link, char *file)
+{
+	struct passwd	*uid;
+	struct group	*gid;
+
+	list[i].size = (intmax_t)about_link.st_size;
+	list[i].nlink = (int)about_link.st_nlink;
+	list[i].flag_link = 0;
+	get_list_mode(list, i, about_link.st_mode);
+	if (file)
+		path_link(list, i, file);
+	get_list_time(list, i, about_link);
+	uid = getpwuid(about_link.st_uid);
+	list[i].user = ft_strdup(uid->pw_name);
+	gid = getgrgid(about_link.st_gid);
+	list[i].group = ft_strdup(gid->gr_name);
+	total_counter(list, about_link, i);
+	return (0);
+}
+
 int		get_list_params(char *file, t_info *list, int i)
 {
 	struct stat		about_file;
-	struct passwd	*uid;
-	struct group	*gid;
+	struct stat		about_link;
 
 	if (stat(file, &about_file))
 	{
 		perror("stat -l");
 		return(1);
 	}
-	list[i].size = (intmax_t)about_file.st_size;
-	list[i].nlink = (int)about_file.st_nlink;
-	list[i].flag_link = 0;
-	get_list_mode(list, i, about_file.st_mode);
-	get_list_time(list, i, about_file);
-	uid = getpwuid(about_file.st_uid);
-	list[i].user = ft_strdup(uid->pw_name);
-	gid = getgrgid(about_file.st_gid);
-	list[i].group = ft_strdup(gid->gr_name);
-	if (i == 0)
-	{
-		list[0].total = 0;
-		list[0].total_no_all = 0;
-	}
-	else if (i > 1 && !list[i].flag_link)
-	{
-		list[0].total = list[0].total + (intmax_t)about_file.st_blocks;
-		if (list[i].name[0] != '.')
-			list[0].total_no_all = list[0].total_no_all + (intmax_t)about_file.st_blocks;
-	}
+	lstat(file, &about_link);
+	if (S_ISLNK(about_link.st_mode))
+		get_list_params_link(list, i, about_link, file);
+	else
+		get_list_params_link(list, i, about_file, NULL);
 	return (0);
 }
 

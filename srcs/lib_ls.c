@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 19:54:04 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/26 14:24:17 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/27 17:56:16 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,18 +140,24 @@ void	set_path(t_options *options, char *path, char *file)
 
 	if (path)
 	{
-		tmp = path;
-		path = ft_strjoin(path, "/\0");
-		free(tmp);
+		if (path[ft_strlen(path) - 1] != '/')
+		{
+			tmp = path;
+			path = ft_strjoin(path, "/\0");
+			free(tmp);
+		}
 		tmp = path;
 		path = ft_strjoin(path, file);
 		free(tmp);
 	}
 	else if (options)
 	{
-		tmp = options->cur_dir;
-		options->cur_dir = ft_strjoin(options->cur_dir, "/\0");
-		free(tmp);
+		if (options->cur_dir[ft_strlen(options->cur_dir) - 1] != '/')
+		{
+			tmp = options->cur_dir;
+			options->cur_dir = ft_strjoin(options->cur_dir, "/\0");
+			free(tmp);
+		}
 		tmp = options->cur_dir;
 		options->cur_dir = ft_strjoin(options->cur_dir, file);
 		free(tmp);

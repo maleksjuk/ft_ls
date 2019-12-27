@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/26 15:12:57 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/27 18:16:13 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int		reading(t_info *list, char *file, t_options *options)
 		dir_read = readdir(dir);
 	}
 	if (closedir(dir) == -1)
-		perror("closedir");
+		perror("closedir_reading");
 	return (i);
 }
 
