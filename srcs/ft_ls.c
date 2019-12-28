@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/27 21:35:47 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/28 17:44:50 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,14 @@ int		reading_no_dir(t_info *list, char name[1024], t_options *options, int i)
 	tmp = list[i].name;
 	list[i].name = ft_strdup(name);
 	// free(tmp);
+	if (list[i].flag_link)
+		options->cur_dir = ft_strdup("\0");
 	set_path(options, NULL, name);
 	if (get_list_params(options->cur_dir, list, i))
 		return (0);
 	options->cur_dir[ft_strlen(options->cur_dir) - ft_strlen(name) - 1] = '\0';
+	if (list[i].name[0] != '.' || options->all)
+		options->count++;
 	return (0);
 }
 
@@ -47,7 +51,6 @@ int		reading(t_info *list, char *file, t_options *options)
 	DIR				*dir;
 	struct dirent	*dir_read;
 	int				i;
-//	char			*tmp;
 
 	dir = NULL;
 	dir_read = NULL;
@@ -77,7 +80,7 @@ int		printing(t_info *list, t_options *options, int len)
 	while (options->tab_len[6] % 8 != 0)
 		options->tab_len[6]++;
 	i = 0;
-	if (options->list && !options->flag_list)
+	if (options->list && !options->flag_list && options->count)
 		ft_printf("total %lld\n", options->all ? list[0].total : list[0].total_no_all);
 	while (i < len)
 	{
@@ -98,9 +101,10 @@ int		printing(t_info *list, t_options *options, int len)
 
 int		processing(t_options *options, char *file)
 {
-	t_info			*list;
-	struct stat		about;
-	int				count;
+	t_info		*list;
+	struct stat	about;
+	struct stat	about_link;
+	int			count;
 
 	list = NULL;
 	if (stat(file, &about))
@@ -113,7 +117,18 @@ int		processing(t_options *options, char *file)
 		perror("list error");
 		exit(1);
 	}
-	if (!S_ISDIR(about.st_mode))
+	lstat(file, &about_link);
+	if (S_ISLNK(about_link.st_mode))
+	{
+		list[0].flag_link = 1;
+		free(options->cur_dir);
+		options->cur_dir = ft_strdup(file);
+		if (reading_no_dir(list, file, options, 0))
+			return (0);
+		count = 1;
+		options->flag_list = 1;
+	}
+	else if (!S_ISDIR(about.st_mode))
 	{
 		free(options->cur_dir);
 		options->cur_dir = ft_strdup("./\0");
@@ -135,8 +150,10 @@ int		processing(t_options *options, char *file)
 
 int		ft_ls(t_options *options, int num)
 {
-	int		i;
-	char	*tmp;
+	int			i;
+	char		*tmp;
+	struct stat	about_link;
+	struct stat	about;
 
 	i = 0;
 	if (num > 0)
@@ -144,11 +161,17 @@ int		ft_ls(t_options *options, int num)
 		sort_ascii(options->dir_array, num);
 		while (i < num)
 		{
-			if (num > 1)
-				ft_printf("%s%s:\n", i > 0 ? "\n" : "", options->dir_array[i]);
 			tmp = options->cur_dir;
 			options->cur_dir = ft_strdup(options->dir_array[i]);
 			free(tmp);
+			if (stat(options->cur_dir, &about))
+			{
+				perror("stat");
+				return (0);
+			}
+			lstat(options->cur_dir, &about_link);
+			if (num > 1 && S_ISDIR(about.st_mode))
+				ft_printf("%s%s:\n", i > 0 ? "\n" : "", options->dir_array[i]);
 			processing(options, options->dir_array[i]);
 			i++;
 		}

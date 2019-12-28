@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/27 20:10:18 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/28 17:06:26 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,7 @@ int		get_list_params(char *file, t_info *list, int i)
 	struct stat		about_file;
 	struct stat		about_link;
 
-	if (stat(file, &about_file))
+	if (!list[i].flag_link && stat(file, &about_file))
 	{
 		perror("stat -l");
 		return(1);
