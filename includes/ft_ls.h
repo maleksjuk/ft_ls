@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/28 17:05:52 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/30 18:25:30 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ typedef struct	s_options
 	**	служебные переменные
 	*/	
 	char	illegal;
+	char	**files_array;
 	char	**dir_array;
+	int		len_for_array[2];
 	int		flag;
 	int		flag_list;
 	char	*cur_dir;
@@ -67,8 +69,14 @@ typedef struct	s_info
 }				t_info;
 
 /*
+**	main.c
+*/
+int		error_message(char *str);
+
+/*
 **	options.c
 */
+void	set_null_tab_len(t_options *options);
 void	init_options(t_options *options, int ac);
 int		input_options(t_options *options, char *params);
 
@@ -79,7 +87,7 @@ int		final_ls(t_options *options);
 int		reading(t_info *list, char *file, t_options *options);
 int		printing(t_info *list, t_options *options, int len);
 int		processing(t_options *options, char *file);
-int		ft_ls(t_options *options, int num);
+int		ft_ls(t_options *options);
 
 /*
 **	lib_ls.c
@@ -89,7 +97,6 @@ t_info	*set_info_list(t_info *list, int len);
 void	update_value_tab_len(t_options *options, t_info *list, int len);
 void	sort_info_list(t_info *list, int len, t_options *options);
 void	set_path(t_options *options, char *path, char *file);
-void	set_null_tab_len(t_options *options);
 
 /*
 **	option_R.c

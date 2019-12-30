@@ -6,13 +6,13 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/28 17:44:50 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/30 19:38:20 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_ls.h"
 
-int		final_ls(t_options *options)
+int	final_ls(t_options *options)
 {
 	int	i;
 
@@ -28,7 +28,7 @@ int		final_ls(t_options *options)
 	return (0);
 }
 
-int		reading_no_dir(t_info *list, char name[1024], t_options *options, int i)
+int	reading_no_dir(t_info *list, char name[1024], t_options *options, int i)
 {
 	char	*tmp;
 
@@ -46,7 +46,7 @@ int		reading_no_dir(t_info *list, char name[1024], t_options *options, int i)
 	return (0);
 }
 
-int		reading(t_info *list, char *file, t_options *options)
+int	reading(t_info *list, char *file, t_options *options)
 {
 	DIR				*dir;
 	struct dirent	*dir_read;
@@ -73,7 +73,7 @@ int		reading(t_info *list, char *file, t_options *options)
 	return (i);
 }
 
-int		printing(t_info *list, t_options *options, int len)
+int	printing(t_info *list, t_options *options, int len)
 {
 	int	i;
 
@@ -99,7 +99,7 @@ int		printing(t_info *list, t_options *options, int len)
 	return (0);
 }
 
-int		processing(t_options *options, char *file)
+int	processing(t_options *options, char *file)
 {
 	t_info		*list;
 	struct stat	about;
@@ -108,15 +108,9 @@ int		processing(t_options *options, char *file)
 
 	list = NULL;
 	if (stat(file, &about))
-	{
-		perror("stat");
-		exit(1);
-	}
+		error_message("processing stat");
 	if ((list = set_info_list(list, about.st_nlink)) == NULL)
-	{
-		perror("list error");
-		exit(1);
-	}
+		error_message("processing list error");
 	lstat(file, &about_link);
 	if (S_ISLNK(about_link.st_mode))
 	{
@@ -148,38 +142,30 @@ int		processing(t_options *options, char *file)
 	return (0);
 }
 
-int		ft_ls(t_options *options, int num)
+int	ft_ls(t_options *options)
 {
 	int			i;
 	char		*tmp;
-	struct stat	about_link;
-	struct stat	about;
 
-	i = 0;
-	if (num > 0)
+	if (options->len_for_array[0])		// обработка файлов
 	{
-		sort_ascii(options->dir_array, num);
-		while (i < num)
+		processing_files(options);
+	}
+	if (options->len_for_array[1])		// обработка директорий
+	{
+		i = 0;
+		while (i < options->len_for_array[1])
 		{
 			tmp = options->cur_dir;
 			options->cur_dir = ft_strdup(options->dir_array[i]);
 			free(tmp);
-			if (stat(options->cur_dir, &about))
-			{
-				perror("stat");
-				return (0);
-			}
-			lstat(options->cur_dir, &about_link);
-			if (num > 1 && S_ISDIR(about.st_mode))
+			if (options->len_for_array[1] > 1)
 				ft_printf("%s%s:\n", i > 0 ? "\n" : "", options->dir_array[i]);
 			processing(options, options->dir_array[i]);
 			i++;
 		}
 	}
-	else
-	{
-		options->cur_dir = ft_strdup(".");
+	if (!options->len_for_array[0] && !options->len_for_array[0])	// обработка без списка файлов и директорий
 		processing(options, "./");
-	}
 	return (final_ls(options));
 }

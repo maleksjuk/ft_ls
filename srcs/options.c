@@ -6,11 +6,22 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 19:10:54 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/28 16:48:15 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/30 18:25:18 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_ls.h"
+
+void	set_null_tab_len(t_options *options)
+{
+	options->tab_len[0] = 11;
+	options->tab_len[1] = 0;
+	options->tab_len[2] = 0;
+	options->tab_len[3] = 0;
+	options->tab_len[4] = 0;
+	options->tab_len[5] = 12;
+	options->tab_len[6] = 0;
+}
 
 void	init_options(t_options *options, int ac)
 {
@@ -20,10 +31,16 @@ void	init_options(t_options *options, int ac)
 	options->reverse = 0;
 	options->time_order = 0;
 	options->illegal = 0;
+	options->files_array = (char **)malloc(sizeof(char *) * ac);
+	if (options->files_array == NULL)
+		exit(1);
+	options->files_array[ac - 1] = NULL;
 	options->dir_array = (char **)malloc(sizeof(char *) * ac);
 	if (options->dir_array == NULL)
 		exit(1);
 	options->dir_array[ac - 1] = NULL;
+	options->len_for_array[0] = 0;
+	options->len_for_array[1] = 0;
 	options->flag = 0;
 	options->cur_dir = ft_strdup(".\0");
 	set_null_tab_len(options);
