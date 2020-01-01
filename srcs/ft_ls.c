@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/30 19:38:20 by obanshee         ###   ########.fr       */
+/*   Updated: 2019/12/31 21:30:59 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	final_ls(t_options *options)
 	return (0);
 }
 
-int	reading_no_dir(t_info *list, char name[1024], t_options *options, int i)
+/*int	reading_no_dir(t_info *list, char name[1024], t_options *options, int i)
 {
 	char	*tmp;
 
@@ -140,7 +140,7 @@ int	processing(t_options *options, char *file)
 	if (options->recursive)
 		recursive(options, options->cur_dir);
 	return (0);
-}
+}*/
 
 int	ft_ls(t_options *options)
 {
@@ -161,11 +161,11 @@ int	ft_ls(t_options *options)
 			free(tmp);
 			if (options->len_for_array[1] > 1)
 				ft_printf("%s%s:\n", i > 0 ? "\n" : "", options->dir_array[i]);
-			processing(options, options->dir_array[i]);
+			processing_dir(options, options->dir_array[i]);
 			i++;
 		}
 	}
 	if (!options->len_for_array[0] && !options->len_for_array[0])	// обработка без списка файлов и директорий
-		processing(options, "./");
+		processing_without(options, "./");
 	return (final_ls(options));
 }
