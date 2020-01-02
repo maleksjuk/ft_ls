@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/28 17:06:26 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/02 16:37:49 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,23 +119,27 @@ int		total_counter(t_info *list, struct stat about, int i)
 	return (0);
 }
 
-int		get_list_params_link(t_info *list, int i, struct stat about_link, char *file)
+int		get_list_params_link(t_info *list, int i, struct stat *about_link, char *file)
 {
 	struct passwd	*uid;
 	struct group	*gid;
 
-	list[i].size = (intmax_t)about_link.st_size;
-	list[i].nlink = (int)about_link.st_nlink;
+	list[i].size = (intmax_t)about_link->st_size;
+	list[i].nlink = (int)about_link->st_nlink;
 	list[i].flag_link = 0;
-	get_list_mode(list, i, about_link.st_mode);
+	get_list_mode(list, i, about_link->st_mode);
 	if (file)
 		path_link(list, i, file);
-	get_list_time(list, i, about_link);
-	uid = getpwuid(about_link.st_uid);
+	get_list_time(list, i, *about_link);
+	if (!(uid = getpwuid(about_link->st_uid)))
+	{
+		perror("uid");
+		exit(2);
+	}
 	list[i].user = ft_strdup(uid->pw_name);
-	gid = getgrgid(about_link.st_gid);
+	gid = getgrgid(about_link->st_gid);
 	list[i].group = ft_strdup(gid->gr_name);
-	total_counter(list, about_link, i);
+	total_counter(list, *about_link, i);
 	return (0);
 }
 
@@ -151,9 +155,9 @@ int		get_list_params(char *file, t_info *list, int i)
 	}
 	lstat(file, &about_link);
 	if (S_ISLNK(about_link.st_mode))
-		get_list_params_link(list, i, about_link, file);
+		get_list_params_link(list, i, &about_link, file);
 	else
-		get_list_params_link(list, i, about_file, NULL);
+		get_list_params_link(list, i, &about_file, NULL);
 	return (0);
 }
 

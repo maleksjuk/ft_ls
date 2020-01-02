@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/30 18:25:30 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/02 17:16:22 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,15 @@ int		input_options(t_options *options, char *params);
 */
 int		final_ls(t_options *options);
 int		reading(t_info *list, char *file, t_options *options);
+int		reading_no_dir(t_info *list, char name[1024], t_options *options, int i);
 int		printing(t_info *list, t_options *options, int len);
-int		processing(t_options *options, char *file);
+//int		processing(t_options *options, char *file);
 int		ft_ls(t_options *options);
+
+//int	processing_without(t_options *options, char *file);
+int	processing_dir(t_options *options, t_info **list);
+int	processing_files(t_options *options, t_info **list);
+int	processing(t_options *options, char *file);
 
 /*
 **	lib_ls.c
@@ -106,7 +112,7 @@ int		recursive(t_options *options, char *file);
 /*
 **	option_l.c
 */
-int		get_list_params(char *file, t_info *list, int i);
+int		get_list_params(char *file, t_info *list, int i);	// BAD WORKS
 void	print_list(t_info *list, int i, t_options *options);
 
 #endif
