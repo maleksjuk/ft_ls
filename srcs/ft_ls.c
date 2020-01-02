@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/02 17:15:38 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/02 17:57:05 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,11 @@ int	processing(t_options *options, char *file)
 
 	list = NULL;
 	if (!file)
-		count = processing_files(options, &list);
+	{
+		if ((list = set_info_list(list, options->len_for_array[0])) == NULL)
+			error_message("processing list error 1");
+		count = processing_files(options, list);
+	}
 	else
 	{
 		if (!ft_strcmp(file, "./\0"))
@@ -71,7 +75,9 @@ int	processing(t_options *options, char *file)
 				error_message("processing stat 2");
 			options->len_for_array[1] = about.st_nlink;
 		}
-		count = processing_dir(options, &list);
+		if ((list = set_info_list(list, options->len_for_array[1])) == NULL)
+			error_message("processing_files list error 3");
+		count = processing_dir(options, list);
 	}
 	if (count < 0)
 		error_message("count");

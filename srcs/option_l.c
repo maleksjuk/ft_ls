@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/02 16:37:49 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/02 17:50:56 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ int		get_list_params_link(t_info *list, int i, struct stat *about_link, char *fi
 	if (!(uid = getpwuid(about_link->st_uid)))
 	{
 		perror("uid");
-		exit(2);
+		//exit(2);
 	}
 	list[i].user = ft_strdup(uid->pw_name);
 	gid = getgrgid(about_link->st_gid);

@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/02 17:16:22 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/02 17:52:55 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,8 @@ int		printing(t_info *list, t_options *options, int len);
 int		ft_ls(t_options *options);
 
 //int	processing_without(t_options *options, char *file);
-int	processing_dir(t_options *options, t_info **list);
-int	processing_files(t_options *options, t_info **list);
+int	processing_dir(t_options *options, t_info *list);
+int	processing_files(t_options *options, t_info *list);
 int	processing(t_options *options, char *file);
 
 /*
