@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/02 17:57:05 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/06 19:43:23 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,32 +28,6 @@ int	final_ls(t_options *options)
 	return (0);
 }
 
-int	printing(t_info *list, t_options *options, int len)
-{
-	int	i;
-
-	while (options->tab_len[6] % 8 != 0)
-		options->tab_len[6]++;
-	i = 0;
-	if (options->list && !options->flag_list && options->count)
-		ft_printf("total %lld\n", options->all ? list[0].total : list[0].total_no_all);
-	while (i < len)
-	{
-		if (list[i].name[0] == '\0')
-			break ;
-		if (list[i].name[0] != '.' || (list[i].name[0] == '.' && options->all))
-		{
-			if (options->list)
-				print_list(list, i, options);
-			else
-				ft_printf("%-*s", options->tab_len[6], list[i].name);
-		}
-		i++;
-	}
-	ft_printf(options->list ? "" : "\n");
-	return (0);
-}
-
 int	processing(t_options *options, char *file)
 {
 	t_info		*list;
@@ -61,23 +35,19 @@ int	processing(t_options *options, char *file)
 	int			count;
 
 	list = NULL;
-	if (!file)
+	if (!file)			//  обработка файлов
 	{
 		if ((list = set_info_list(list, options->len_for_array[0])) == NULL)
 			error_message("processing list error 1");
 		count = processing_files(options, list);
 	}
-	else
+	else				//	обработка директорий
 	{
-		if (!ft_strcmp(file, "./\0"))
-		{
-			if (stat(file, &about))
-				error_message("processing stat 2");
-			options->len_for_array[1] = about.st_nlink;
-		}
-		if ((list = set_info_list(list, options->len_for_array[1])) == NULL)
+		if (stat(file, &about))
+			error_message("processing stat");
+		if ((list = set_info_list(list, about.st_nlink)) == NULL)
 			error_message("processing_files list error 3");
-		count = processing_dir(options, list);
+		count = processing_dir(options, list, file);
 	}
 	if (count < 0)
 		error_message("count");

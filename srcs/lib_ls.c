@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 19:54:04 by obanshee          #+#    #+#             */
-/*   Updated: 2019/12/30 18:26:22 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/06 19:22:58 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,4 +162,12 @@ void	set_path(t_options *options, char *path, char *file)
 		options->cur_dir = ft_strjoin(options->cur_dir, file);
 		free(tmp);
 	}
+}
+
+void	update_path(t_options *options, char *path)
+{
+	//char	*tmp;
+
+	free(options->cur_dir);
+	options->cur_dir = ft_strdup(path);
 }

@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/02 17:52:55 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/06 19:44:00 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,16 +84,23 @@ int		input_options(t_options *options, char *params);
 **	ft_ls.c
 */
 int		final_ls(t_options *options);
-int		reading(t_info *list, char *file, t_options *options);
-int		reading_no_dir(t_info *list, char name[1024], t_options *options, int i);
-int		printing(t_info *list, t_options *options, int len);
-//int		processing(t_options *options, char *file);
 int		ft_ls(t_options *options);
 
-//int	processing_without(t_options *options, char *file);
-int	processing_dir(t_options *options, t_info *list);
+int	processing_dir(t_options *options, t_info *list, char *file);
 int	processing_files(t_options *options, t_info *list);
 int	processing(t_options *options, char *file);
+
+/*
+**	reader.c
+*/
+int		reading(t_info *list, char *file, t_options *options);
+int		reading_one_file(t_info *list, char name[1024], t_options *options, int i);
+
+/*
+**	printer.c
+*/
+int		printing(t_info *list, t_options *options, int len);
+void	print_list(t_info *list, int i, t_options *options);
 
 /*
 **	lib_ls.c
@@ -103,6 +110,7 @@ t_info	*set_info_list(t_info *list, int len);
 void	update_value_tab_len(t_options *options, t_info *list, int len);
 void	sort_info_list(t_info *list, int len, t_options *options);
 void	set_path(t_options *options, char *path, char *file);
+void	update_path(t_options *options, char *path);
 
 /*
 **	option_R.c
@@ -113,6 +121,5 @@ int		recursive(t_options *options, char *file);
 **	option_l.c
 */
 int		get_list_params(char *file, t_info *list, int i);	// BAD WORKS
-void	print_list(t_info *list, int i, t_options *options);
 
 #endif

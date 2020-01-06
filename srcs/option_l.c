@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/02 17:50:56 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/06 18:21:20 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,14 +131,16 @@ int		get_list_params_link(t_info *list, int i, struct stat *about_link, char *fi
 	if (file)
 		path_link(list, i, file);
 	get_list_time(list, i, *about_link);
-	if (!(uid = getpwuid(about_link->st_uid)))
-	{
+	if (!(uid = getpwuid(about_link->st_uid)))		// UID and GID - very bad places
 		perror("uid");
-		//exit(2);
-	}
+		//error_message("uid");
 	list[i].user = ft_strdup(uid->pw_name);
-	gid = getgrgid(about_link->st_gid);
+	if (!(gid = getgrgid(about_link->st_gid)))
+		perror("gid");
+		//error_message("gid");
 	list[i].group = ft_strdup(gid->gr_name);
+	// list[i].user = ft_strdup("USER\0");
+	// list[i].group = ft_strdup("GROUP\0");
 	total_counter(list, *about_link, i);
 	return (0);
 }
@@ -148,30 +150,16 @@ int		get_list_params(char *file, t_info *list, int i)
 	struct stat		about_file;
 	struct stat		about_link;
 
-	if (!list[i].flag_link && stat(file, &about_file))
-	{
-		perror("stat -l");
-		return(1);
-	}
+	if (!list[i].flag_link)
+		if (stat(file, &about_file))				// приходит неправильный file
+		{
+			perror("stat g_l_p");
+		//	error_message("stat -l");
+		}	
 	lstat(file, &about_link);
 	if (S_ISLNK(about_link.st_mode))
 		get_list_params_link(list, i, &about_link, file);
 	else
-		get_list_params_link(list, i, &about_file, NULL);
+		get_list_params_link(list, i, &about_file, NULL);	// здесь, возможно, приходит неверный указатель
 	return (0);
-}
-
-void	print_list(t_info *list, int i, t_options *options)
-{
-	ft_printf("%s %*i %-*s  %-*s  %*d %*s %s",
-		list[i].mode, 
-		options->tab_len[1], list[i].nlink,
-		options->tab_len[2], list[i].user,
-		options->tab_len[3], list[i].group,
-		options->tab_len[4], list[i].size,
-		options->tab_len[5], list[i].time_modif,
-		list[i].name);
-	if (list[i].flag_link)
-		ft_printf(" -> %s", list[i].path_link);
-	ft_printf("\n");
 }

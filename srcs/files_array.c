@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 19:38:03 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/02 17:56:53 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/06 17:30:48 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	processing_files(t_options *options, t_info *list)
 			list[count].flag_link = 1;
 			free(options->cur_dir);
 			options->cur_dir = ft_strdup(file);
-			if (reading_no_dir(list, file, options, count))
+			if (reading_one_file(list, file, options, count))
 				return (-1);
 		}
 		else
@@ -39,7 +39,7 @@ int	processing_files(t_options *options, t_info *list)
 			free(options->cur_dir);
 			options->cur_dir = ft_strdup("./\0");
 			list[count].name = options->files_array[count];
-			if (reading_no_dir(list, file, options, count))
+			if (reading_one_file(list, file, options, count))
 				return (-1);
 		}
 		count++;
