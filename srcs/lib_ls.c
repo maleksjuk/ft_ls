@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 19:54:04 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/06 19:22:58 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/09 19:58:15 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,24 @@ t_info	*set_info_list(t_info *list, int len)
 	return (list);
 }
 
+void	set_null_tab_len(t_options *options)
+{
+	options->tab_len[0] = 11;
+	options->tab_len[1] = 0;
+	options->tab_len[2] = 0;
+	options->tab_len[3] = 0;
+	options->tab_len[4] = 0;
+	options->tab_len[5] = 12;
+	options->tab_len[6] = 0;
+}
+
 void	update_value_tab_len(t_options *options, t_info *list, int len)
 {
 	char	*nlink;
 	char	*size;
 	int		i;
 
+	set_null_tab_len(options);
 	i = 0;
 	while (i < len)
 	{
@@ -134,40 +146,41 @@ void	sort_info_list(t_info *list, int len, t_options *options)
 	}
 }
 
-void	set_path(t_options *options, char *path, char *file)
+void	set_path(t_options *options, char *file)
 {
-	char	*tmp;
+	int	len;
+	int	i;
 
-	if (path)
+	len = ft_strlen(options->cur_dir);
+	if (len > 0 && options->cur_dir[len - 1] != '/')
 	{
-		if (path[ft_strlen(path) - 1] != '/')
-		{
-			tmp = path;
-			path = ft_strjoin(path, "/\0");
-			free(tmp);
-		}
-		tmp = path;
-		path = ft_strjoin(path, file);
-		free(tmp);
+		options->cur_dir[len] = '/';
+		len++;
 	}
-	else if (options)
+	i = 0;
+	while (file[i])
 	{
-		if (options->cur_dir[ft_strlen(options->cur_dir) - 1] != '/')
-		{
-			tmp = options->cur_dir;
-			options->cur_dir = ft_strjoin(options->cur_dir, "/\0");
-			free(tmp);
-		}
-		tmp = options->cur_dir;
-		options->cur_dir = ft_strjoin(options->cur_dir, file);
-		free(tmp);
+		options->cur_dir[len] = file[i];
+		i++;
+		len++;
 	}
+	options->cur_dir[len] = '\0';
 }
 
 void	update_path(t_options *options, char *path)
 {
-	//char	*tmp;
+	int	i;
+	int	len;
 
-	free(options->cur_dir);
-	options->cur_dir = ft_strdup(path);
+	i = 0;
+	while (i < MAX_PATH)
+		options->cur_dir[i++] = '\0';
+	len = ft_strlen(path);
+	i = 0;
+	while (i < len)
+	{
+		options->cur_dir[i] = path[i];
+		i++;
+	}
+	options->cur_dir[i] = '\0';
 }

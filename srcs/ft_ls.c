@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/06 19:43:23 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/09 20:34:35 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,19 @@ int	final_ls(t_options *options)
 	int	i;
 
 	i = 0;
-	while (options->dir_array[i])
+	while (i < options->len_for_array[0])
 	{
-//		free(options->dir_array[i]);
+		free(options->dir_array[i]);
 		i++;
 	}
-//	free(options->dir_array);
-	free(options->cur_dir);
+	i = 0;
+	while (i < options->len_for_array[1])
+	{
+		free(options->files_array[i]);
+		i++;
+	}
+	free(options->dir_array);
+	free(options->files_array);
 	free(options);
 	return (0);
 }
@@ -51,22 +57,21 @@ int	processing(t_options *options, char *file)
 	}
 	if (count < 0)
 		error_message("count");
-	set_null_tab_len(options);
 	sort_info_list(list, count, options);
 	update_value_tab_len(options, list, count);
 	printing(list, options, count);
-	// if (options->recursive)
-	// 	recursive(options, options->cur_dir);
+	if (file && options->recursive)
+		recursive(options, file);
 	return (0);
 }
 
 int	ft_ls(t_options *options)
 {
-	int			i;
-	char		*tmp;
+	int	i;
 
 	if (options->len_for_array[0])		// обработка файлов
 	{
+		update_path(options, "\0");
 		processing(options, NULL);
 	}
 	if (options->len_for_array[1])		// обработка директорий
@@ -74,9 +79,7 @@ int	ft_ls(t_options *options)
 		i = 0;
 		while (i < options->len_for_array[1])
 		{
-			tmp = options->cur_dir;
-			options->cur_dir = ft_strdup(options->dir_array[i]);
-			free(tmp);
+			update_path(options, options->dir_array[i]);
 			if (options->len_for_array[1] > 1 || options->len_for_array[0])
 				ft_printf("%s%s:\n",  (i > 0 || options->len_for_array[0]) ?
 					"\n" : "", options->dir_array[i]);
@@ -85,6 +88,9 @@ int	ft_ls(t_options *options)
 		}
 	}
 	if (!options->len_for_array[0] && !options->len_for_array[1])	// обработка без списка файлов и директорий
-		processing(options, "./");
+	{
+		update_path(options, "./\0");
+		processing(options, "./\0");
+	}
 	return (final_ls(options));
 }

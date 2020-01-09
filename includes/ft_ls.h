@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/06 19:44:00 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/09 19:58:43 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@
 # include <pwd.h>
 # include <grp.h>
 
+# define MAX_PATH 1024
+
 typedef struct	s_options
 {
 	int		list;
@@ -42,7 +44,7 @@ typedef struct	s_options
 	int		len_for_array[2];
 	int		flag;
 	int		flag_list;
-	char	*cur_dir;
+	char	cur_dir[MAX_PATH];
 	int		tab_len[7];
 	int		count;
 }				t_options;
@@ -76,7 +78,6 @@ int		error_message(char *str);
 /*
 **	options.c
 */
-void	set_null_tab_len(t_options *options);
 void	init_options(t_options *options, int ac);
 int		input_options(t_options *options, char *params);
 
@@ -107,9 +108,10 @@ void	print_list(t_info *list, int i, t_options *options);
 */
 void	sort_ascii(char **array, int num);
 t_info	*set_info_list(t_info *list, int len);
+void	set_null_tab_len(t_options *options);
 void	update_value_tab_len(t_options *options, t_info *list, int len);
 void	sort_info_list(t_info *list, int len, t_options *options);
-void	set_path(t_options *options, char *path, char *file);
+void	set_path(t_options *options, char *file);
 void	update_path(t_options *options, char *path);
 
 /*
@@ -120,6 +122,6 @@ int		recursive(t_options *options, char *file);
 /*
 **	option_l.c
 */
-int		get_list_params(char *file, t_info *list, int i);	// BAD WORKS
+int		get_list_params(char *file, t_info *list, int i);
 
 #endif
