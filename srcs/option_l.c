@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/06 18:21:20 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/10 18:23:50 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ void	path_link(t_info *list, int i, char *file)
 	list[i].mode[0] = 'l';
 	bufsize = 1024;					// CHANGE SIZE
 	bufer = (char *)malloc(bufsize);
+	ft_memset(bufer, '\0', bufsize);
 	if (readlink(file, bufer, bufsize) > 0)		// change to while
 	{
 		list[i].path_link = ft_strdup(bufer);
@@ -54,30 +55,18 @@ int		get_list_mode(t_info *list, int i, mode_t mode)
 	return (0);
 }
 
-void	set_format_date(char *date)
+void	set_format_date(char *date, long time_digit)
 {
 	int		i;
 	int		j;
-	char	*current;
 	long	cur_time;
-	char	*year;
 
 	i = -1;
 	while (i++ < 6)
 		date[i] = date[4 + i];
 	cur_time = time(NULL);
-	current = ft_strdup(ctime(&cur_time));
-	year = ft_strdup(date);
-	j = -1;
-	while (++j < 4)
-	{
-		current[j] = current[20 + j];
-		year[j] = year[20 + j];
-	}
-	current[j] = '\0';
-	year[j] = '\0';
 	j = 0;
-	if (!ft_strcmp(current, year))
+	if (cur_time - time_digit < SEMI_YEAR)
 		while (j < 5)
 			date[i++] = date[11 + j++];
 	else
@@ -97,9 +86,9 @@ int		get_list_time(t_info *list, int i, struct stat about_file)
 	list[i].time_active = ft_strdup(ctime(&about_file.st_atimespec.tv_sec));
 	list[i].time_modif = ft_strdup(ctime(&about_file.st_mtimespec.tv_sec));
 	list[i].time_create = ft_strdup(ctime(&about_file.st_ctimespec.tv_sec));
-	set_format_date(list[i].time_active);
-	set_format_date(list[i].time_modif);
-	set_format_date(list[i].time_create);
+	set_format_date(list[i].time_active, list[i].time_active_digit);
+	set_format_date(list[i].time_modif, list[i].time_modif_digit);
+	set_format_date(list[i].time_create, list[i].time_create_digit);
 	return (0);
 }
 
@@ -131,16 +120,12 @@ int		get_list_params_link(t_info *list, int i, struct stat *about_link, char *fi
 	if (file)
 		path_link(list, i, file);
 	get_list_time(list, i, *about_link);
-	if (!(uid = getpwuid(about_link->st_uid)))		// UID and GID - very bad places
-		perror("uid");
-		//error_message("uid");
+	if (!(uid = getpwuid(about_link->st_uid)))
+		error_message("uid", 1);
 	list[i].user = ft_strdup(uid->pw_name);
 	if (!(gid = getgrgid(about_link->st_gid)))
-		perror("gid");
-		//error_message("gid");
+		error_message("gid", 1);
 	list[i].group = ft_strdup(gid->gr_name);
-	// list[i].user = ft_strdup("USER\0");
-	// list[i].group = ft_strdup("GROUP\0");
 	total_counter(list, *about_link, i);
 	return (0);
 }
@@ -154,7 +139,7 @@ int		get_list_params(char *file, t_info *list, int i)
 		if (stat(file, &about_file))				// приходит неправильный file
 		{
 			perror("stat g_l_p");
-		//	error_message("stat -l");
+		//	error_message("stat -l", 1);
 		}	
 	lstat(file, &about_link);
 	if (S_ISLNK(about_link.st_mode))

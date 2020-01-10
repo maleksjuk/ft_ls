@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:34 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/09 20:13:30 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/10 18:22:42 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,14 @@ int	usage(t_options *options)
 	return (1);
 }
 
-int	error_message(char *str)
+int	error_message(char *str, int exit_flag)
 {
+	ft_printf("./ft_ls: ");
 	perror(str);
-	exit(1);
+	if (exit_flag)
+		exit(1);
+	else
+		return (1);
 }
 
 int	check_file(char *name)
@@ -32,8 +36,8 @@ int	check_file(char *name)
 
 	if (stat(name, &about))
 	{
-		perror("stat");
-		exit(1);
+		error_message(name, 0);
+		return (2);
 	}
 	lstat(name, &about_link);
 	if (S_ISDIR(about.st_mode))
@@ -49,6 +53,7 @@ int	main(int ac, char **av)
 {
 	t_options	*options;
 	int			i;
+	int			ret;
 
 	i = 1;
 	options = (t_options *)malloc(sizeof(t_options));
@@ -63,15 +68,16 @@ int	main(int ac, char **av)
 		}
 		while (i < ac)
 		{
-			if (check_file(av[i]))
+			ret = check_file(av[i]);
+			if (ret == 1)
 			{
 				if (!(options->files_array[options->len_for_array[0]++] = ft_strdup(av[i])))
-					error_message("error malloc files_array[]");
+					error_message("error malloc files_array[]", 1);
 			}
-			else
+			else if (ret == 0)
 			{
 				if (!(options->dir_array[options->len_for_array[1]++] = ft_strdup(av[i])))
-					error_message("error malloc dir_array[]");
+					error_message("error malloc dir_array[]", 1);
 			}
 			i++;
 		}

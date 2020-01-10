@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 19:38:00 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/09 19:44:07 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/09 21:28:02 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	processing_dir(t_options *options, t_info *list, char *file)
 {
-	int			count;
+	int	count;
 
 	options->flag_list = 0;
 	if ((count = reading(list, file, options)) == 0)

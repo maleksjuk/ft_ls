@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/02 15:22:26 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/09 20:20:34 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/10 18:22:17 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,11 @@ int	reading(t_info *list, char *file, t_options *options)
 	char			*path;
 
 	path = ft_strdup(file);
-	// dir = NULL;
-	// dir_read = NULL;
+	dir = NULL;
+	dir_read = NULL;
 	i = 0;
-	if (!(dir = opendir(file)))
-		error_message("opendir_reading");
+	if ((dir = opendir(file)) == NULL)
+		error_message("opendir_reading", 1);
 	dir_read = readdir(dir);
 	i = 0;
 	while (dir_read != NULL)

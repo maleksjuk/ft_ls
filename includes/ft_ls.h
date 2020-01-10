@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/09 19:58:43 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/10 18:24:14 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <grp.h>
 
 # define MAX_PATH 1024
+# define SEMI_YEAR 60 * 60 * 24 * 365 / 2
 
 typedef struct	s_options
 {
@@ -73,7 +74,7 @@ typedef struct	s_info
 /*
 **	main.c
 */
-int		error_message(char *str);
+int		error_message(char *str, int exit_flag);
 
 /*
 **	options.c

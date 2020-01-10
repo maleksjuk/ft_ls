@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/09 20:34:35 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/10 18:24:58 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,19 +44,19 @@ int	processing(t_options *options, char *file)
 	if (!file)			//  обработка файлов
 	{
 		if ((list = set_info_list(list, options->len_for_array[0])) == NULL)
-			error_message("processing list error 1");
+			error_message("processing list error 1", 1);
 		count = processing_files(options, list);
 	}
 	else				//	обработка директорий
 	{
 		if (stat(file, &about))
-			error_message("processing stat");
+			error_message("processing stat", 1);
 		if ((list = set_info_list(list, about.st_nlink)) == NULL)
-			error_message("processing_files list error 3");
+			error_message("processing_files list error 3", 1);
 		count = processing_dir(options, list, file);
 	}
 	if (count < 0)
-		error_message("count");
+		error_message("count", 1);
 	sort_info_list(list, count, options);
 	update_value_tab_len(options, list, count);
 	printing(list, options, count);
