@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 20:19:23 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/09 21:02:21 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/10 18:59:14 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int		recursive(t_options *options, char *file)
 
 	if (!(dir = opendir(file)))
 	{
-		perror(file);
+		error_message(file, 0);
 		return (1);
 	}
 	dir_read = readdir(dir);
@@ -41,6 +41,6 @@ int		recursive(t_options *options, char *file)
 		dir_read = readdir(dir);
 	}
 	if (closedir(dir) == -1)
-		perror("closedir -R");
+		error_message("close", 0);
 	return (0);
 }

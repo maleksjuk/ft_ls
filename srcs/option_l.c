@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/10 18:23:50 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/10 18:57:07 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,10 +121,10 @@ int		get_list_params_link(t_info *list, int i, struct stat *about_link, char *fi
 		path_link(list, i, file);
 	get_list_time(list, i, *about_link);
 	if (!(uid = getpwuid(about_link->st_uid)))
-		error_message("uid", 1);
+		error_message("UID", 1);
 	list[i].user = ft_strdup(uid->pw_name);
 	if (!(gid = getgrgid(about_link->st_gid)))
-		error_message("gid", 1);
+		error_message("GID", 1);
 	list[i].group = ft_strdup(gid->gr_name);
 	total_counter(list, *about_link, i);
 	return (0);
@@ -132,19 +132,19 @@ int		get_list_params_link(t_info *list, int i, struct stat *about_link, char *fi
 
 int		get_list_params(char *file, t_info *list, int i)
 {
-	struct stat		about_file;
-	struct stat		about_link;
+	struct stat	about_file;
+	struct stat	about_link;
 
 	if (!list[i].flag_link)
-		if (stat(file, &about_file))				// приходит неправильный file
+		if (stat(file, &about_file))
 		{
-			perror("stat g_l_p");
-		//	error_message("stat -l", 1);
+			ft_printf("GLP ");
+			error_message(file, 1);
 		}	
 	lstat(file, &about_link);
 	if (S_ISLNK(about_link.st_mode))
 		get_list_params_link(list, i, &about_link, file);
 	else
-		get_list_params_link(list, i, &about_file, NULL);	// здесь, возможно, приходит неверный указатель
+		get_list_params_link(list, i, &about_file, NULL);
 	return (0);
 }

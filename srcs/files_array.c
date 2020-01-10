@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 19:38:03 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/10 18:40:42 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/10 18:53:32 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	processing_files(t_options *options, t_info *list)
 		else
 			update_path(options, "./\0");
 		if (stat(options->files_array[count], &about))
-			error_message("processing_files stat", 1);
+			error_message(options->files_array[count], 1);
 		lstat(options->files_array[count], &about_link);
 		if (S_ISLNK(about_link.st_mode))
 		{
