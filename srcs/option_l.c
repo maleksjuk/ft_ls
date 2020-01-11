@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/10 18:57:07 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/11 17:38:23 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@ void	path_link(t_info *list, int i, char *file)
 	int		bufsize;
 
 	list[i].mode[0] = 'l';
-	bufsize = 1024;					// CHANGE SIZE
+	bufsize = 1024;
 	bufer = (char *)malloc(bufsize);
 	ft_memset(bufer, '\0', bufsize);
-	if (readlink(file, bufer, bufsize) > 0)		// change to while
+	if (readlink(file, bufer, bufsize) > 0)
 	{
 		list[i].path_link = ft_strdup(bufer);
 		list[i].flag_link = 1;
@@ -135,16 +135,17 @@ int		get_list_params(char *file, t_info *list, int i)
 	struct stat	about_file;
 	struct stat	about_link;
 
-	if (!list[i].flag_link)
-		if (stat(file, &about_file))
-		{
-			ft_printf("GLP ");
-			error_message(file, 1);
-		}	
 	lstat(file, &about_link);
 	if (S_ISLNK(about_link.st_mode))
 		get_list_params_link(list, i, &about_link, file);
 	else
+	{
+		if (stat(file, &about_file))	// EACCES
+		{
+			ft_printf("GLP ");
+			return (error_message(file, (errno == EACCES) ? 0 : 1));
+		}
 		get_list_params_link(list, i, &about_file, NULL);
+	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:34 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/10 18:53:14 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/11 21:32:49 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	usage(t_options *options)
 
 int	error_message(char *str, int exit_flag)
 {
-	ft_printf("./ft_ls: ");
+	ft_printf("ft_ls: ");
 	perror(str);
 	if (exit_flag)
 		exit(1);

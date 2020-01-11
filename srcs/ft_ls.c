@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/10 18:52:20 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/11 21:31:58 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,27 @@ int	final_ls(t_options *options)
 	return (0);
 }
 
+int	free_list(t_info *list, int count)
+{
+	int	i;
+
+	i = 0;
+	while (i < count)
+	{
+		free(list[i].name);
+		free(list[i].user);
+		free(list[i].group);
+		free(list[i].time_active);
+		free(list[i].time_create);
+		free(list[i].time_modif);
+		if (list[i].mode[0] == 'l')
+			free(list[i].path_link);
+		i++;
+	}
+	free(list);
+	return (0);
+}
+
 int	processing(t_options *options, char *file)
 {
 	t_info		*list;
@@ -49,17 +70,24 @@ int	processing(t_options *options, char *file)
 	}
 	else				//	обработка директорий
 	{
-		if (stat(file, &about))
-			error_message(file, 1);
+		if (stat(file, &about))	// EACCES
+		{
+			error_message(file, 0);
+			if (errno == EACCES)
+				return (0);
+		}
+			// return (error_message(file, (errno == EACCES) ? 0 : 1));
 		if ((list = set_info_list(list, about.st_nlink)) == NULL)
 			error_message("error malloc()", 1);
 		count = processing_dir(options, list, file);
 	}
 	if (count < 0)
-		error_message("count", 1);
+		return (0);
+		// error_message("count", 1);
 	sort_info_list(list, count, options);
 	update_value_tab_len(options, list, count);
 	printing(list, options, count);
+	free_list(list, count);
 	if (file && options->recursive)
 		recursive(options, file);
 	return (0);
@@ -76,15 +104,17 @@ int	ft_ls(t_options *options)
 	}
 	if (options->len_for_array[1])		// обработка директорий
 	{
-		i = 0;
-		while (i < options->len_for_array[1])
+		i = options->reverse ? options->len_for_array[1] : 0;
+		while ((!options->reverse && i < options->len_for_array[1]) ||
+			(options->reverse && i > 0))
 		{
+			i -= options->reverse ? 1 : 0;
 			update_path(options, options->dir_array[i]);
 			if (options->len_for_array[1] > 1 || options->len_for_array[0])
 				ft_printf("%s%s:\n",  (i > 0 || options->len_for_array[0]) ?
 					"\n" : "", options->dir_array[i]);
 			processing(options, options->dir_array[i]);
-			i++;
+			i += options->reverse ? 0 : 1;
 		}
 	}
 	if (!options->len_for_array[0] && !options->len_for_array[1])	// обработка без списка файлов и директорий
