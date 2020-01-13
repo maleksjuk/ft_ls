@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/13 20:06:23 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/13 21:11:06 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,10 @@ int	processing(t_options *options, char *file)
 	struct stat	about;
 	int			count;
 
-	list = NULL;
 	if (!file)			//  обработка файлов
 	{
-		if ((list = set_info_list(list, options->len_for_array[0])) == NULL)
-			error_message("error malloc()", 1);
+		if ((list = set_info_list(options->len_for_array[0])) == NULL)
+			error_message("error malloc()", FULL_EXIT);
 		count = processing_files(options, list);
 	}
 	else				//	обработка директорий
@@ -76,9 +75,8 @@ int	processing(t_options *options, char *file)
 			if (errno == EACCES)
 				return (0);
 		}
-			// return (error_message(file, (errno == EACCES) ? 0 : 1));
-		if ((list = set_info_list(list, about.st_nlink)) == NULL)
-			error_message("error malloc()", 1);
+		if ((list = set_info_list(about.st_nlink)) == NULL)
+			error_message("error malloc()", FULL_EXIT);
 		count = processing_dir(options, list, file);
 	}
 	if (count < 0)

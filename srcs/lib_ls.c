@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 19:54:04 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/13 19:56:32 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/13 21:24:26 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,43 @@ void	sort_ascii(char **array, int num)
 	}
 }
 
-t_info	*set_info_list(t_info *list, int len)
+void	init_list(t_info *list, int i)
 {
-	int	i;
+	int	count;
+
+	count = 0;
+	while (count < 12)
+		list[i].mode[count++] = '\0';
+	list[i].name = NULL;
+	list[i].user = NULL;
+	list[i].group = NULL;
+	list[i].nlink = 0;
+	list[i].size = 0;
+	list[i].major_num = 0;
+	list[i].minor_num = 0;
+	list[i].time_create = NULL;
+	list[i].time_create_digit = 0;
+	list[i].time_modif = NULL;
+	list[i].time_modif_digit = 0;
+	list[i].time_active = NULL;
+	list[i].time_active_digit = 0;
+	list[i].total = 0;
+	list[i].total_no_all = 0;
+	list[i].path_link = NULL;
+	list[i].flag_link = 0;
+}
+
+t_info	*set_info_list(int len)
+{
+	int		i;
+	t_info	*list;
 
 	i = 0;
 	list = (t_info *)malloc(sizeof(t_info) * (len + 1));
 	if (list == NULL)
 		return (NULL);
 	while (i < len)
-		list[i++].flag_link = 0;
+		init_list(list, i++);
 	return (list);
 }
 
@@ -163,6 +190,48 @@ void	sort_info_list(t_info *list, int len, t_options *options)
 		}
 		j++;
 	}
+}
+
+int		add_path(t_options *options, char *path)
+{
+	int	len1;
+	int	len2;
+	int	i;
+
+	len1 = ft_strlen(options->cur_dir);
+	len2 = ft_strlen(path);
+	if (len1 + len2 > MAX_PATH)
+		return (len1);
+	if (len1 > 0 && options->cur_dir[len1 - 1] != '/')
+	{
+		options->cur_dir[len1] = '/';
+		len1++;
+	}
+	i = 0;
+	while (i < len2)
+	{
+		options->cur_dir[len1 + i] = path[i];
+		i++;
+	}
+	return (len1 + i);
+}
+
+int		delete_last_path(t_options *options)
+{
+	int	len;
+
+	len = ft_strlen(options->cur_dir);
+	while (len > 0)
+	{
+		len--;
+		options->cur_dir[len] = '\0';
+		if (options->cur_dir[len] == '/')
+		{
+			options->cur_dir[len] = '\0';
+			break;
+		}
+	}
+	return (len);
 }
 
 void	set_path(t_options *options, char *file)

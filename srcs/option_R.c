@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 20:19:23 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/13 17:31:01 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/13 21:09:44 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int		glp_rev(char *file, t_info *list, int i)
 	if (stat(file, &about_file))
 	{
 		ft_printf("GLP_REV ");
-		return (error_message(file, (errno == EACCES) ? 0 : 1));
+		return (error_message(file, (errno == EACCES) ? 0 : FULL_EXIT));
 	}
 	list[i].time_active_digit = about_file.st_atimespec.tv_sec;
 	list[i].time_modif_digit = about_file.st_mtimespec.tv_sec;
@@ -112,7 +112,7 @@ t_info	*recursive_create_array(t_options *options, char *file)
 	current = 0;
 	path = ft_strnew(MAX_PATH);
 	list_rev = NULL;
-	list_rev = set_info_list(list_rev, len);
+	list_rev = set_info_list(len);
 	if (!(dir = opendir(file)))
 		return (NULL);
 	dir_read = readdir(dir);

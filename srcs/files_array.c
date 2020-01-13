@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/30 19:38:03 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/11 20:03:28 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/13 21:26:30 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ int	processing_files(t_options *options, t_info *list)
 	count = 0;
 	while (count < options->len_for_array[0])
 	{
-		if (options->files_array[count][0] == '/' ||
-			ft_strnequ(options->files_array[count], "./\0", 2) ||
-			ft_strnequ(options->files_array[count], "../\0", 3))
+		// if (options->files_array[count][0] == '/' ||
+		// 	ft_strnequ(options->files_array[count], "./\0", 2) ||
+		// 	ft_strnequ(options->files_array[count], "../\0", 3))
 			update_path(options, "\0");
-		else
-			update_path(options, "./\0");
+		// else
+		// 	update_path(options, "./\0");
 		if (stat(options->files_array[count], &about))	// EACCES
-			error_message(options->files_array[count], 1);
+			error_message(options->files_array[count], FULL_EXIT);
 		lstat(options->files_array[count], &about_link);	// EACCES
 		if (S_ISLNK(about_link.st_mode))
 		{

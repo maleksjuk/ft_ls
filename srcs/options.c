@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 19:10:54 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/13 19:56:43 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/13 20:57:21 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,25 +23,21 @@ void	init_options(t_options *options, int ac)
 	options->time_order = 0;
 	options->illegal = 0;
 	if (!(options->files_array = (char **)malloc(sizeof(char *) * ac)))
-		error_message("error malloc()", 1);
+		error_message("error malloc()", FULL_EXIT);
 	if (!(options->dir_array = (char **)malloc(sizeof(char *) * ac)))
-		error_message("error malloc()", 1);
-	i = 0;
-	while (i < ac)
+		error_message("error malloc()", FULL_EXIT);
+	i = -1;
+	while (++i < ac)
 	{
 		options->dir_array[i] = NULL;
 		options->files_array[i] = NULL;
-		i++;
 	}
 	options->len_for_array[0] = 0;
 	options->len_for_array[1] = 0;
 	options->flag = 0;
 	i = 0;
 	while (i < MAX_PATH)
-	{
-		options->cur_dir[i] = '\0';
-		i++;
-	}
+		options->cur_dir[i++] = '\0';
 	options->flag_list = 0;
 	options->count = 0;
 	options->flag_spec = 0;

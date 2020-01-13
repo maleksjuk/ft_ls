@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/13 20:12:56 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/13 20:56:16 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,10 +121,10 @@ int		get_list_params_link(t_info *list, int i, struct stat *about_link, char *fi
 		path_link(list, i, file);
 	get_list_time(list, i, *about_link);
 	if (!(uid = getpwuid(about_link->st_uid)))
-		error_message("UID", 1);
+		error_message("UID", FULL_EXIT);
 	list[i].user = ft_strdup(uid->pw_name);
 	if (!(gid = getgrgid(about_link->st_gid)))
-		error_message("GID", 1);
+		error_message("GID", FULL_EXIT);
 	list[i].group = ft_strdup(gid->gr_name);
 	list[i].total = (intmax_t)about_link->st_blocks;
 	return (0);
@@ -143,7 +143,7 @@ int		get_list_params(char *file, t_info *list, int i)
 		if (stat(file, &about_file))	// EACCES
 		{
 			ft_printf("GLP ");
-			return (error_message(file, (errno == EACCES) ? 0 : 1));
+			return (error_message(file, (errno == EACCES) ? 0 : FULL_EXIT));
 		}
 		get_list_params_link(list, i, &about_file, NULL);
 	}

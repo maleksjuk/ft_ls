@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/06 17:34:35 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/13 19:57:19 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/13 21:39:28 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ int	    printing(t_info *list, t_options *options, int len)
 	{
 		if (list[i].name[0] == '\0')
 			break ;
-		if (list[i].name[0] != '.' || (list[i].name[0] == '.' && options->all))
+		if (list[i].name[0] != '.' || ft_strnequ(list[i].name, "./", 2) ||
+			ft_strnequ(list[i].name, "../", 3) || options->all)
 		{
 			if (options->list)
 				print_list(list, i, options);

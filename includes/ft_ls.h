@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/13 19:55:56 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/13 21:24:08 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@
 
 # define MAX_PATH 1024
 # define SEMI_YEAR 60 * 60 * 24 * 365 / 2
+# define FULL_EXIT 1
 
 typedef struct	s_options
 {
@@ -113,13 +114,15 @@ void	print_list(t_info *list, int i, t_options *options);
 **	lib_ls.c
 */
 void	sort_ascii(char **array, int num);
-t_info	*set_info_list(t_info *list, int len);
+t_info	*set_info_list(int len);
 void	set_null_tab_len(t_options *options);
 void	update_value_tab_len(t_options *options, t_info *list, int len);
 void	sort_info_list(t_info *list, int len, t_options *options);
 void	set_path(t_options *options, char *file);
 void	update_path(t_options *options, char *path);
 intmax_t	total_counter(t_info *list, int len, int all);
+int		add_path(t_options *options, char *path);
+int		delete_last_path(t_options *options);
 
 /*
 **	option_R.c
