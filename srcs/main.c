@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:34 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/11 21:32:49 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/13 18:11:23 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@ int	check_file(char *name)
 	struct stat	about;
 	struct stat	about_link;
 
+	// if (ft_strchr(name, '*'))
+	// 	return (3);
 	if (stat(name, &about))
 	{
 		error_message(name, 0);
@@ -69,12 +71,12 @@ int	main(int ac, char **av)
 		while (i < ac)
 		{
 			ret = check_file(av[i]);
-			if (ret == 1)
+			if (ret == 1 || ret == 3)
 			{
 				if (!(options->files_array[options->len_for_array[0]++] = ft_strdup(av[i])))
 					error_message("error malloc()", 1);
 			}
-			else if (ret == 0)
+			if (ret == 0 || ret == 3)
 			{
 				if (!(options->dir_array[options->len_for_array[1]++] = ft_strdup(av[i])))
 					error_message("error malloc()", 1);

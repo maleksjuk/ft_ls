@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 20:19:23 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/11 22:13:05 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/13 17:31:01 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,68 @@ void	free_array(char **array, int len)
 	free(array);
 }
 
-char	**recursive_create_array(t_options *options, char *file)
+int		glp_rev(char *file, t_info *list, int i)
+{
+	struct stat	about_file;
+
+	if (stat(file, &about_file))
+	{
+		ft_printf("GLP_REV ");
+		return (error_message(file, (errno == EACCES) ? 0 : 1));
+	}
+	list[i].time_active_digit = about_file.st_atimespec.tv_sec;
+	list[i].time_modif_digit = about_file.st_mtimespec.tv_sec;
+	list[i].time_create_digit = about_file.st_ctimespec.tv_sec;
+	return (0);
+}
+
+void	set_path_rev(char *path, char *file)
+{
+	int	len;
+	int	i;
+
+	len = ft_strlen(path);
+	if (len > 0 && path[len - 1] != '/')
+	{
+		path[len] = '/';
+		len++;
+	}
+	i = 0;
+	while (file[i])
+	{
+		path[len] = file[i];
+		i++;
+		len++;
+	}
+	path[len] = '\0';
+}
+
+void	update_path_rev(char *file, char *path)
+{
+	int	i;
+	int	len;
+
+	i = 0;
+	while (i < MAX_PATH)
+		file[i++] = '\0';
+	len = ft_strlen(path);
+	i = 0;
+	while (i < len)
+	{
+		file[i] = path[i];
+		i++;
+	}
+	file[i] = '\0';
+}
+
+t_info	*recursive_create_array(t_options *options, char *file)
 {
 	DIR				*dir;
 	struct dirent	*dir_read;
-	char			**dir_array;
 	int				len;
 	int				current;
+	t_info			*list_rev;
+	char			*path;
 
 	len = 0;
 	if (!(dir = opendir(file)))
@@ -55,10 +110,9 @@ char	**recursive_create_array(t_options *options, char *file)
 		return (NULL);
 
 	current = 0;
-	dir_array = NULL;
-	dir_array = set_dir_array(dir_array, len);
-	if (dir_array == NULL)
-		error_message("error malloc()", 1);
+	path = ft_strnew(MAX_PATH);
+	list_rev = NULL;
+	list_rev = set_info_list(list_rev, len);
 	if (!(dir = opendir(file)))
 		return (NULL);
 	dir_read = readdir(dir);
@@ -69,37 +123,40 @@ char	**recursive_create_array(t_options *options, char *file)
 			dir_read->d_name[1] != '\0')))
 			if (dir_read->d_type == 4)
 			{
-				dir_array[current] = ft_strdup(dir_read->d_name);
+				list_rev[current].name = ft_strdup(dir_read->d_name);
+				update_path_rev(path, file);
+				set_path_rev(path, dir_read->d_name);
+				glp_rev(path, list_rev, current);
 				current++;
 			}
 		dir_read = readdir(dir);
 	}
 	if (closedir(dir) == -1)
 		return (NULL);
-	sort_ascii(dir_array, len);
-	return (dir_array);
+	sort_info_list(list_rev, len, options);
+	list_rev[0].size = len;
+	return (list_rev);
 }
 
 int		recursive(t_options *options, char *file)
 {
 	char			*file_for_r;
-	char			**dir_array;
+	t_info			*list_rev;
 	int				i;
 
-	dir_array = recursive_create_array(options, file);
-	if (dir_array == NULL)
+	list_rev = recursive_create_array(options, file);
+	if (list_rev == NULL)
 		return (error_message(file, 0));
 	i = 0;
-	while (dir_array[i])
+	while (i < list_rev[0].size)
 	{
 		update_path(options, file);
-		set_path(options, dir_array[i]);
+		set_path(options, list_rev[i].name);
 		ft_printf("\n%s:\n", options->cur_dir);
 		file_for_r = ft_strdup(options->cur_dir);
 		processing(options, file_for_r);
 		free(file_for_r);
 		i++;
 	}
-	free_array(dir_array, i);
 	return (0);
 }

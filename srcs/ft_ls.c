@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/11 21:31:58 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/13 20:06:23 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,26 +34,26 @@ int	final_ls(t_options *options)
 	return (0);
 }
 
-int	free_list(t_info *list, int count)
-{
-	int	i;
+// int	free_list(t_info *list, int count)
+// {
+// 	int	i;
 
-	i = 0;
-	while (i < count)
-	{
-		free(list[i].name);
-		free(list[i].user);
-		free(list[i].group);
-		free(list[i].time_active);
-		free(list[i].time_create);
-		free(list[i].time_modif);
-		if (list[i].mode[0] == 'l')
-			free(list[i].path_link);
-		i++;
-	}
-	free(list);
-	return (0);
-}
+// 	i = 0;
+// 	while (i < count)
+// 	{
+// 		// free(list[i].name);
+// 		free(list[i].user);
+// 		free(list[i].group);
+// 		// free(list[i].time_active);
+// 		free(list[i].time_create);
+// 		free(list[i].time_modif);
+// 		if (list[i].mode[0] == 'l')
+// 			free(list[i].path_link);
+// 		i++;
+// 	}
+// 	free(list);
+// 	return (0);
+// }
 
 int	processing(t_options *options, char *file)
 {
@@ -86,8 +86,9 @@ int	processing(t_options *options, char *file)
 		// error_message("count", 1);
 	sort_info_list(list, count, options);
 	update_value_tab_len(options, list, count);
+	list[0].total = total_counter(list, count, options->all);
 	printing(list, options, count);
-	free_list(list, count);
+	// free_list(list, count);
 	if (file && options->recursive)
 		recursive(options, file);
 	return (0);

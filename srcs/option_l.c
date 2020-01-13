@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/11 17:38:23 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/13 20:12:56 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,12 @@ int		get_list_mode(t_info *list, int i, mode_t mode)
 	return (0);
 }
 
-void	set_format_date(char *date, long time_digit)
+char	*set_format_date(char *date, long time_digit)
 {
 	int		i;
 	int		j;
 	long	cur_time;
+	char	*new_date;
 
 	i = -1;
 	while (i++ < 6)
@@ -76,35 +77,27 @@ void	set_format_date(char *date, long time_digit)
 			date[i++] = date[20 + j++];
 	}
 	date[i] = '\0';
+	new_date = ft_strdup(date);
+	return (new_date);
 }
 
 int		get_list_time(t_info *list, int i, struct stat about_file)
 {
-	list[i].time_active_digit = about_file.st_atimespec.tv_sec;
-	list[i].time_modif_digit = about_file.st_mtimespec.tv_sec;
-	list[i].time_create_digit = about_file.st_ctimespec.tv_sec;
-	list[i].time_active = ft_strdup(ctime(&about_file.st_atimespec.tv_sec));
-	list[i].time_modif = ft_strdup(ctime(&about_file.st_mtimespec.tv_sec));
-	list[i].time_create = ft_strdup(ctime(&about_file.st_ctimespec.tv_sec));
-	set_format_date(list[i].time_active, list[i].time_active_digit);
-	set_format_date(list[i].time_modif, list[i].time_modif_digit);
-	set_format_date(list[i].time_create, list[i].time_create_digit);
-	return (0);
-}
+	char	*tmp;
 
-int		total_counter(t_info *list, struct stat about, int i)
-{
-	if (i == 0)
-	{
-		list[0].total = 0;
-		list[0].total_no_all = 0;
-	}
-	else if (i > 1)
-	{
-		list[0].total = list[0].total + (intmax_t)about.st_blocks;
-		if (list[i].name[0] != '.')
-			list[0].total_no_all = list[0].total_no_all + (intmax_t)about.st_blocks;
-	}
+	list[i].time_modif_digit = about_file.st_mtimespec.tv_sec;
+	tmp = ft_strdup(ctime(&about_file.st_mtimespec.tv_sec));
+	list[i].time_modif = set_format_date(tmp, list[i].time_modif_digit);
+	free(tmp);
+
+	// list[i].time_active_digit = about_file.st_atimespec.tv_sec;
+	// list[i].time_active = ft_strdup(ctime(&about_file.st_atimespec.tv_sec));
+	// set_format_date(list[i].time_active, list[i].time_active_digit);
+	
+	// list[i].time_create_digit = about_file.st_ctimespec.tv_sec;
+	// list[i].time_create = ft_strdup(ctime(&about_file.st_ctimespec.tv_sec));
+	// set_format_date(list[i].time_create, list[i].time_create_digit);
+	
 	return (0);
 }
 
@@ -113,10 +106,17 @@ int		get_list_params_link(t_info *list, int i, struct stat *about_link, char *fi
 	struct passwd	*uid;
 	struct group	*gid;
 
-	list[i].size = (intmax_t)about_link->st_size;
+	get_list_mode(list, i, about_link->st_mode);
+	if (list[i].mode[0] == 'c' || list[i].mode[0] == 'b')
+	{
+		list[i].size = -1;
+		list[i].major_num = major(about_link->st_rdev);
+		list[i].minor_num = minor(about_link->st_rdev);
+	}
+	else
+		list[i].size = (intmax_t)about_link->st_size;
 	list[i].nlink = (int)about_link->st_nlink;
 	list[i].flag_link = 0;
-	get_list_mode(list, i, about_link->st_mode);
 	if (file)
 		path_link(list, i, file);
 	get_list_time(list, i, *about_link);
@@ -126,7 +126,7 @@ int		get_list_params_link(t_info *list, int i, struct stat *about_link, char *fi
 	if (!(gid = getgrgid(about_link->st_gid)))
 		error_message("GID", 1);
 	list[i].group = ft_strdup(gid->gr_name);
-	total_counter(list, *about_link, i);
+	list[i].total = (intmax_t)about_link->st_blocks;
 	return (0);
 }
 

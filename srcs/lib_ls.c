@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 19:54:04 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/11 20:09:28 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/13 19:56:32 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,22 @@ void	set_null_tab_len(t_options *options)
 	options->tab_len[6] = 0;
 }
 
+intmax_t	total_counter(t_info *list, int len, int all)
+{
+	int			i;
+	intmax_t	total;
+
+	i = 0;
+	total = 0;
+	while (i < len)
+	{
+		if (all || list[i].name[0] != '.')
+			total += list[i].total;
+		i++;
+	}
+	return (total);
+}
+
 void	update_value_tab_len(t_options *options, t_info *list, int len)
 {
 	char	*nlink;
@@ -79,9 +95,19 @@ void	update_value_tab_len(t_options *options, t_info *list, int len)
 				options->tab_len[2] = ft_strlen(list[i].user);
 			if ((int)ft_strlen(list[i].group) > options->tab_len[3])
 				options->tab_len[3] = ft_strlen(list[i].group);
-			size = ft_itoa(list[i].size);
+			if (list[i].size < 0)
+			{
+				if (list[i].major_num > list[i].minor_num)
+					size = ft_itoa(list[i].major_num);
+				else
+					size = ft_itoa(list[i].minor_num);
+				options->flag_spec = 1;
+			}
+			else
+				size = ft_itoa(list[i].size);
 			if ((int)ft_strlen(size) > options->tab_len[4])
 				options->tab_len[4] = ft_strlen(size);
+			
 			if ((int)ft_strlen(list[i].name) > options->tab_len[6])
 				options->tab_len[6] = ft_strlen(list[i].name) + 1;
 		}
@@ -91,18 +117,16 @@ void	update_value_tab_len(t_options *options, t_info *list, int len)
 
 int		condition_sort(t_info *list, int i, t_options *options)
 {
-	if (!(options->time_order))
+	if (!(options->time_order) || (options->time_order &&
+		list[i].time_modif_digit == list[i + 1].time_modif_digit))
 	{
 		if (!(options->reverse))
 		{
 			if (ft_strcmp(list[i].name, list[i + 1].name) > 0)
 				return (1);
 		}
-		else
-		{
-			if (ft_strcmp(list[i].name, list[i + 1].name) < 0)
-				return (1);
-		}
+		else if (ft_strcmp(list[i].name, list[i + 1].name) < 0)
+			return (1);
 	}
 	else
 	{
@@ -111,13 +135,9 @@ int		condition_sort(t_info *list, int i, t_options *options)
 			if (list[i].time_modif_digit < list[i + 1].time_modif_digit)
 				return (1);
 		}
-		else
-		{
-			if (list[i].time_modif_digit > list[i + 1].time_modif_digit)
-				return (1);
-		}
+		else if (list[i].time_modif_digit > list[i + 1].time_modif_digit)
+			return (1);
 	}
-	
 	return (0);
 }
 
