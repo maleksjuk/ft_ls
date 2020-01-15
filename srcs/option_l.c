@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/13 20:56:16 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/15 16:54:00 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,44 +89,51 @@ int		get_list_time(t_info *list, int i, struct stat about_file)
 	tmp = ft_strdup(ctime(&about_file.st_mtimespec.tv_sec));
 	list[i].time_modif = set_format_date(tmp, list[i].time_modif_digit);
 	free(tmp);
-
-	// list[i].time_active_digit = about_file.st_atimespec.tv_sec;
-	// list[i].time_active = ft_strdup(ctime(&about_file.st_atimespec.tv_sec));
-	// set_format_date(list[i].time_active, list[i].time_active_digit);
-	
-	// list[i].time_create_digit = about_file.st_ctimespec.tv_sec;
-	// list[i].time_create = ft_strdup(ctime(&about_file.st_ctimespec.tv_sec));
-	// set_format_date(list[i].time_create, list[i].time_create_digit);
-	
+	list[i].time_active_digit = about_file.st_atimespec.tv_sec;
+	tmp = ft_strdup(ctime(&about_file.st_atimespec.tv_sec));
+	list[i].time_active = set_format_date(tmp, list[i].time_active_digit);
+	free(tmp);
+	list[i].time_create_digit = about_file.st_ctimespec.tv_sec;
+	tmp = ft_strdup(ctime(&about_file.st_ctimespec.tv_sec));
+	list[i].time_create = set_format_date(tmp, list[i].time_create_digit);
+	free(tmp);
 	return (0);
 }
 
-int		get_list_params_link(t_info *list, int i, struct stat *about_link, char *file)
+int		get_user_and_group(t_info *list, int i, struct stat *about)
 {
 	struct passwd	*uid;
 	struct group	*gid;
 
-	get_list_mode(list, i, about_link->st_mode);
+	if (!(uid = getpwuid(about->st_uid)))
+		return (error_message("UID", 0));
+	list[i].user = ft_strdup(uid->pw_name);
+	if (!(gid = getgrgid(about->st_gid)))
+		return (error_message("GID", 0));
+	list[i].group = ft_strdup(gid->gr_name);
+	return (0);
+}
+
+int		get_all_params(t_info *list, int i, struct stat *about, char *file)
+{
+	get_list_time(list, i, *about);
+	if (!(list[i].full_params))
+		return (0);
+	get_list_mode(list, i, about->st_mode);
+	get_user_and_group(list, i, about);
 	if (list[i].mode[0] == 'c' || list[i].mode[0] == 'b')
 	{
 		list[i].size = -1;
-		list[i].major_num = major(about_link->st_rdev);
-		list[i].minor_num = minor(about_link->st_rdev);
+		list[i].major_num = major(about->st_rdev);
+		list[i].minor_num = minor(about->st_rdev);
 	}
 	else
-		list[i].size = (intmax_t)about_link->st_size;
-	list[i].nlink = (int)about_link->st_nlink;
+		list[i].size = (intmax_t)about->st_size;
+	list[i].nlink = (int)about->st_nlink;
 	list[i].flag_link = 0;
 	if (file)
 		path_link(list, i, file);
-	get_list_time(list, i, *about_link);
-	if (!(uid = getpwuid(about_link->st_uid)))
-		error_message("UID", FULL_EXIT);
-	list[i].user = ft_strdup(uid->pw_name);
-	if (!(gid = getgrgid(about_link->st_gid)))
-		error_message("GID", FULL_EXIT);
-	list[i].group = ft_strdup(gid->gr_name);
-	list[i].total = (intmax_t)about_link->st_blocks;
+	list[i].total = (intmax_t)about->st_blocks;
 	return (0);
 }
 
@@ -137,15 +144,15 @@ int		get_list_params(char *file, t_info *list, int i)
 
 	lstat(file, &about_link);
 	if (S_ISLNK(about_link.st_mode))
-		get_list_params_link(list, i, &about_link, file);
+		get_all_params(list, i, &about_link, file);
 	else
 	{
-		if (stat(file, &about_file))	// EACCES
+		if (stat(file, &about_file))
 		{
 			ft_printf("GLP ");
 			return (error_message(file, (errno == EACCES) ? 0 : FULL_EXIT));
 		}
-		get_list_params_link(list, i, &about_file, NULL);
+		get_all_params(list, i, &about_file, NULL);
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 19:10:54 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/13 20:57:21 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/15 15:49:31 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	init_options(t_options *options, int ac)
 	i = 0;
 	while (i < MAX_PATH)
 		options->cur_dir[i++] = '\0';
-	options->flag_list = 0;
+	options->list_files = 0;
 	options->count = 0;
 	options->flag_spec = 0;
 }

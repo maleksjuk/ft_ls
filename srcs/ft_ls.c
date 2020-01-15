@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/13 21:11:06 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/15 16:17:40 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ int	ft_ls(t_options *options)
 
 	if (options->len_for_array[0])		// обработка файлов
 	{
-		update_path(options, "\0");
+		update_path(options, NULL);
 		processing(options, NULL);
 	}
 	if (options->len_for_array[1])		// обработка директорий
@@ -108,7 +108,8 @@ int	ft_ls(t_options *options)
 			(options->reverse && i > 0))
 		{
 			i -= options->reverse ? 1 : 0;
-			update_path(options, options->dir_array[i]);
+			update_path(options, NULL);
+			add_path(options->cur_dir, options->dir_array[i]);
 			if (options->len_for_array[1] > 1 || options->len_for_array[0])
 				ft_printf("%s%s:\n",  (i > 0 || options->len_for_array[0]) ?
 					"\n" : "", options->dir_array[i]);

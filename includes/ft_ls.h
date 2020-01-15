@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/13 21:24:08 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/15 16:39:47 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ typedef struct	s_options
 	char	**dir_array;
 	int		len_for_array[2];
 	int		flag;
-	int		flag_list;
+	int		list_files;
 	int		flag_spec;
 	char	cur_dir[MAX_PATH];
 	int		tab_len[7];
@@ -75,6 +75,7 @@ typedef struct	s_info
 	intmax_t	total_no_all;
 	char		*path_link;
 	int			flag_link;
+	int			full_params;
 }				t_info;
 
 /*
@@ -119,10 +120,10 @@ void	set_null_tab_len(t_options *options);
 void	update_value_tab_len(t_options *options, t_info *list, int len);
 void	sort_info_list(t_info *list, int len, t_options *options);
 void	set_path(t_options *options, char *file);
-void	update_path(t_options *options, char *path);
+int		update_path(t_options *options, char *path);
 intmax_t	total_counter(t_info *list, int len, int all);
-int		add_path(t_options *options, char *path);
-int		delete_last_path(t_options *options);
+int		add_path(char *directory, char *path);
+int		delete_last_path(char *directory);
 
 /*
 **	option_R.c

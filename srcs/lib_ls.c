@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 19:54:04 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/13 21:24:26 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/15 16:43:31 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	init_list(t_info *list, int i)
 	list[i].total_no_all = 0;
 	list[i].path_link = NULL;
 	list[i].flag_link = 0;
+	list[i].full_params = 0;
 }
 
 t_info	*set_info_list(int len)
@@ -115,26 +116,28 @@ void	update_value_tab_len(t_options *options, t_info *list, int len)
 	{
 		if (options->all || list[i].name[0] != '.')
 		{
-			nlink = ft_itoa(list[i].nlink);
-			if ((int)ft_strlen(nlink) > options->tab_len[1])
-				options->tab_len[1] = ft_strlen(nlink);
-			if ((int)ft_strlen(list[i].user) > options->tab_len[2])
-				options->tab_len[2] = ft_strlen(list[i].user);
-			if ((int)ft_strlen(list[i].group) > options->tab_len[3])
-				options->tab_len[3] = ft_strlen(list[i].group);
-			if (list[i].size < 0)
+			if (options->list)
 			{
-				if (list[i].major_num > list[i].minor_num)
-					size = ft_itoa(list[i].major_num);
+				nlink = ft_itoa(list[i].nlink);
+				if ((int)ft_strlen(nlink) > options->tab_len[1])
+					options->tab_len[1] = ft_strlen(nlink);
+				if ((int)ft_strlen(list[i].user) > options->tab_len[2])
+					options->tab_len[2] = ft_strlen(list[i].user);
+				if ((int)ft_strlen(list[i].group) > options->tab_len[3])
+					options->tab_len[3] = ft_strlen(list[i].group);
+				if (list[i].size < 0)
+				{
+					if (list[i].major_num > list[i].minor_num)
+						size = ft_itoa(list[i].major_num);
+					else
+						size = ft_itoa(list[i].minor_num);
+					options->flag_spec = 1;
+				}
 				else
-					size = ft_itoa(list[i].minor_num);
-				options->flag_spec = 1;
+					size = ft_itoa(list[i].size);
+				if ((int)ft_strlen(size) > options->tab_len[4])
+					options->tab_len[4] = ft_strlen(size);
 			}
-			else
-				size = ft_itoa(list[i].size);
-			if ((int)ft_strlen(size) > options->tab_len[4])
-				options->tab_len[4] = ft_strlen(size);
-			
 			if ((int)ft_strlen(list[i].name) > options->tab_len[6])
 				options->tab_len[6] = ft_strlen(list[i].name) + 1;
 		}
@@ -192,44 +195,44 @@ void	sort_info_list(t_info *list, int len, t_options *options)
 	}
 }
 
-int		add_path(t_options *options, char *path)
+int		add_path(char *directory, char *path)
 {
 	int	len1;
 	int	len2;
 	int	i;
 
-	len1 = ft_strlen(options->cur_dir);
+	len1 = ft_strlen(directory);
 	len2 = ft_strlen(path);
 	if (len1 + len2 > MAX_PATH)
 		return (len1);
-	if (len1 > 0 && options->cur_dir[len1 - 1] != '/')
+	if (len1 > 0 && directory[len1 - 1] != '/')
 	{
-		options->cur_dir[len1] = '/';
+		directory[len1] = '/';
 		len1++;
 	}
 	i = 0;
 	while (i < len2)
 	{
-		options->cur_dir[len1 + i] = path[i];
+		directory[len1 + i] = path[i];
 		i++;
 	}
 	return (len1 + i);
 }
 
-int		delete_last_path(t_options *options)
+int		delete_last_path(char *directory)
 {
 	int	len;
 
-	len = ft_strlen(options->cur_dir);
+	len = ft_strlen(directory);
 	while (len > 0)
 	{
 		len--;
-		options->cur_dir[len] = '\0';
-		if (options->cur_dir[len] == '/')
+		if (directory[len] == '/')
 		{
-			options->cur_dir[len] = '\0';
+			directory[len] = '\0';
 			break;
 		}
+		directory[len] = '\0';
 	}
 	return (len);
 }
@@ -255,20 +258,13 @@ void	set_path(t_options *options, char *file)
 	options->cur_dir[len] = '\0';
 }
 
-void	update_path(t_options *options, char *path)
+int		update_path(t_options *options, char *path)
 {
-	int	i;
-	int	len;
-
-	i = 0;
-	while (i < MAX_PATH)
-		options->cur_dir[i++] = '\0';
-	len = ft_strlen(path);
-	i = 0;
-	while (i < len)
-	{
-		options->cur_dir[i] = path[i];
-		i++;
-	}
-	options->cur_dir[i] = '\0';
+	ft_memset(options->cur_dir, '\0', MAX_PATH);
+	if (!path)
+		return (0);
+	if (ft_strlen(path) > MAX_PATH)
+		return (1);
+	ft_strcpy(options->cur_dir, path);
+	return (0);
 }
