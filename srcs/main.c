@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:34 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/15 15:59:00 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/15 17:25:43 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,14 @@ int	main(int ac, char **av)
 			ret = check_file(av[i]);
 			if (ret == 1 || ret == 3)
 			{
-				if (!(options->files_array[options->len_for_array[0]++] = ft_strdup(av[i])))
+				if (!(options->files_array[options->len_for_array[0]++] =
+					ft_strdup(av[i])))
 					error_message("error malloc()", FULL_EXIT);
 			}
 			if (ret == 0 || ret == 3)
 			{
-				if (!(options->dir_array[options->len_for_array[1]++] = ft_strdup(av[i])))
+				if (!(options->dir_array[options->len_for_array[1]++] =
+					ft_strdup(av[i])))
 					error_message("error malloc()", FULL_EXIT);
 			}
 			i++;

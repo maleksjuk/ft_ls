@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 19:54:04 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/15 16:43:31 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/15 17:19:49 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ void	update_value_tab_len(t_options *options, t_info *list, int len)
 				nlink = ft_itoa(list[i].nlink);
 				if ((int)ft_strlen(nlink) > options->tab_len[1])
 					options->tab_len[1] = ft_strlen(nlink);
+				free(nlink);
 				if ((int)ft_strlen(list[i].user) > options->tab_len[2])
 					options->tab_len[2] = ft_strlen(list[i].user);
 				if ((int)ft_strlen(list[i].group) > options->tab_len[3])
@@ -137,6 +138,7 @@ void	update_value_tab_len(t_options *options, t_info *list, int len)
 					size = ft_itoa(list[i].size);
 				if ((int)ft_strlen(size) > options->tab_len[4])
 					options->tab_len[4] = ft_strlen(size);
+				free(size);
 			}
 			if ((int)ft_strlen(list[i].name) > options->tab_len[6])
 				options->tab_len[6] = ft_strlen(list[i].name) + 1;

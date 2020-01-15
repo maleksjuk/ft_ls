@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/06 17:34:35 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/15 16:36:01 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/15 17:23:12 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,6 @@ int	    printing(t_info *list, t_options *options, int len)
 		}
 		i++;
 	}
-	ft_printf(options->list ? "" : "\n");
+	ft_printf("%s", options->list ? "" : "\n");
 	return (0);
 }
