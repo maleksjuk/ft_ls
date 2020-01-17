@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 05:30:11 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 06:46:35 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,13 @@ int	processing(t_options *options, char *file)
 			if (errno == EACCES)
 				return (0);
 		}
+		if (S_ISDIR(about.st_mode))
+			if (!(about.st_mode & S_IXUSR))
+			{
+				count = 0;
+				list = NULL;
+				return (0);
+			}
 		if ((list = set_info_list(about.st_nlink)) == NULL)
 			error_message("error malloc()", FULL_EXIT);
 		count = processing_dir(options, list, file);
@@ -98,11 +105,13 @@ int	ft_ls(t_options *options)
 
 	if (options->len_for_array[0])		// обработка файлов
 	{
+		options->flag_current_process = 0;
 		update_path(options, NULL);
 		processing(options, NULL);
 	}
 	if (options->len_for_array[1])		// обработка директорий
 	{
+		options->flag_current_process = 1;
 		i = options->reverse ? options->len_for_array[1] : 0;
 		while ((!options->reverse && i < options->len_for_array[1]) ||
 			(options->reverse && i > 0))
@@ -120,6 +129,7 @@ int	ft_ls(t_options *options)
 	}
 	if (!options->len_for_array[0] && !options->len_for_array[1])	// обработка без списка файлов и директорий
 	{
+		options->flag_current_process = 2;
 		update_path(options, "./\0");
 		processing(options, "./\0");
 	}

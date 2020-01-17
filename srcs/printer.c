@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/06 17:34:35 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/15 17:23:12 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 06:29:19 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	print_list(t_info *list, int i, t_options *options)
 		options->tab_len[4], list[i].major_num,
 		options->tab_len[4], list[i].minor_num);
 	else
-		ft_printf("  %*d", options->flag_spec ?
+		ft_printf("  %*lld", options->flag_spec ?
 		(options->tab_len[4] * 2 + 2) : options->tab_len[4], list[i].size);
 	ft_printf(" %*s %s",
 		options->tab_len[5], list[i].time_modif,
@@ -43,7 +43,7 @@ int	    printing(t_info *list, t_options *options, int len)
 	i = 0;
 	if (options->list && !options->list_files && options->count)
 		ft_printf("total %lld\n", list[0].total);
-	while (i < len)
+	while (list && i < len)
 	{
 		if (list[i].name[0] == '\0')
 			break ;

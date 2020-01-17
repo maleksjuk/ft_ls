@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 04:00:07 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 06:12:14 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,7 @@ int		get_list_params(char *file, t_info *list, int i)
 		{
 			ft_printf("GLP ");	// DELETE
 			return (error_message(file, (errno == EACCES) ? 0 : FULL_EXIT));
+			// return (1);
 		}
 		get_all_params(list, i, &about_file, NULL);
 	}
