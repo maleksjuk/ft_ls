@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/17 07:44:35 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 10:42:39 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 13:23:04 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ int	processing_helper(t_options *options, char *file)
 	else
 	{
 		if (stat(file, &about))
-			return (error_message(file, 0));
+			return (error_message(file, 0) - 3);
 		if (S_ISDIR(about.st_mode) && !(about.st_mode & S_IXUSR))
-			return (0);
+			return (-1);
 		if ((list = set_info_list(about.st_nlink)) == NULL)
 			error_message("error malloc()", FULL_EXIT);
 		count = processing_dir(options, list, file);
@@ -70,13 +70,13 @@ int	processing_helper(t_options *options, char *file)
 	update_value_tab_len(options, list, count);
 	printing(list, options, count);
 	free_list(list, count);
-	return (0);
+	return (count);
 }
 
 int	processing(t_options *options, char *file)
 {
-	processing_helper(options, file);
-	if (file && options->recursive)
-		recursive(options, file);
+	if (processing_helper(options, file) >= 0)
+		if (file && options->recursive)
+			recursive(options, file);
 	return (0);
 }

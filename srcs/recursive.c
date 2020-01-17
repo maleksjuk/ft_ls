@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 20:19:23 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 11:04:17 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 11:54:14 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,11 @@ void	rec_print_current_directory(t_options *options)
 	if (options->flag_current_process == 1 &&
 		!ft_strequ(options->dir_array[options->bug_ls_for_recursion], "/\0"))
 	{
-		ft_printf("\n%s/", options->dir_array[options->bug_ls_for_recursion]);
+		ft_printf("\n%s", options->dir_array[options->bug_ls_for_recursion]);
 		len = ft_strlen(options->dir_array[options->bug_ls_for_recursion]);
-		ft_printf("%s:\n", options->cur_dir + len + 1);
+		if (options->dir_array[options->bug_ls_for_recursion][len - 1] == '/')
+			ft_printf("/");
+		ft_printf("%s:\n", options->cur_dir + len);
 	}
 	else
 		ft_printf("\n%s:\n", options->cur_dir);

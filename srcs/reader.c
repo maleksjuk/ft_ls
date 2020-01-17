@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/02 15:22:26 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 09:16:03 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 13:18:33 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,10 @@ int	reading(t_info *list, char *file, t_options *options)
 
 	dir = opendir(file);
 	if (!dir)
-		if (error_message(file, 0) == 2)
-			return (0);
+	{
+		error_message(file, 0);
+		return (-1);
+	}
 	i = 0;
 	dir_read = readdir(dir);
 	while (dir_read != NULL)

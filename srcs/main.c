@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:34 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 09:05:00 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 13:19:23 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,11 @@ int	usage(t_options *options)
 
 int	error_message(char *str, int exit_flag)
 {
+	char	*path;
+
 	ft_printf("ft_ls: ");
-	perror(str);
+	path = ft_strrchr(str, '/') ? ft_strrchr(str, '/') + 1 : str;
+	perror(path);
 	if (errno == EACCES)
 		return (2);
 	if (exit_flag)
