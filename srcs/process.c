@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/17 07:44:35 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 13:23:04 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 14:36:54 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	processing_helper(t_options *options, char *file)
 			return (error_message(file, 0) - 3);
 		if (S_ISDIR(about.st_mode) && !(about.st_mode & S_IXUSR))
 			return (-1);
-		if ((list = set_info_list(about.st_nlink)) == NULL)
+		if ((list = set_info_list(reader_number_elems(file, &about))) == NULL)
 			error_message("error malloc()", FULL_EXIT);
 		count = processing_dir(options, list, file);
 	}

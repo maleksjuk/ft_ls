@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 10:56:44 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 14:37:47 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ int				processing(t_options *options, char *file);
 int				reading_one_file(t_info *list, char name[1024],
 					t_options *options, int i);
 int				reading(t_info *list, char *file, t_options *options);
+int				reader_number_elems(char *file, struct stat *about);
 
 /*
 **	printer.c
