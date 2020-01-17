@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 20:19:23 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 11:54:14 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 13:46:09 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,6 @@ int		rec_get_list_param(char *file, t_info *list, int i)
 	list[i].time_active_digit = about_file.st_atimespec.tv_sec;
 	list[i].time_modif_digit = about_file.st_mtimespec.tv_sec;
 	list[i].time_create_digit = about_file.st_ctimespec.tv_sec;
-	list[i].user = ft_strdup("-R\0");
-	list[i].group = ft_strdup("-R\0");
-	list[i].time_active = ft_strdup("-R\0");
-	list[i].time_create = ft_strdup("-R\0");
-	list[i].time_modif = ft_strdup("-R\0");
 	return (0);
 }
 
@@ -40,6 +35,7 @@ void	rec_array_set_val(char *file, int *current, t_info *list,
 	set_path(path, name);
 	rec_get_list_param(path, list, *current);
 	(*current)++;
+	free(path);
 }
 
 int		rec_reading_directory(t_options *options, char *file, int *len,
@@ -77,11 +73,11 @@ t_info	*rec_create_array(t_options *options, char *file)
 
 	len = 0;
 	if (rec_reading_directory(options, file, &len, NULL))
-		error_message(file, 0);
+		return (NULL);
 	current = 0;
 	list_rev = set_info_list(len);
 	if (rec_reading_directory(options, file, &current, list_rev))
-		error_message(file, 0);
+		return (NULL);
 	sort_info_list(list_rev, len, options);
 	list_rev[0].size = len;
 	return (list_rev);

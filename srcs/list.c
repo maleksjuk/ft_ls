@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/17 08:42:28 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 10:42:07 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 13:45:11 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,12 +110,17 @@ int		free_list(t_info *list, int count)
 	i = 0;
 	while (i < count)
 	{
-		free(list[i].name);
-		free(list[i].user);
-		free(list[i].group);
-		free(list[i].time_active);
-		free(list[i].time_create);
-		free(list[i].time_modif);
+			free(list[i].name);
+		if (list[i].user)
+			free(list[i].user);
+		if (list[i].group)
+			free(list[i].group);
+		if (list[i].time_active)
+			free(list[i].time_active);
+		if (list[i].time_create)
+			free(list[i].time_create);
+		if (list[i].time_modif)
+			free(list[i].time_modif);
 		if (list[i].mode[0] == 'l')
 			free(list[i].path_link);
 		i++;

@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 10:37:48 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 13:49:30 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@ int	final_ls(t_options *options)
 	int	i;
 
 	i = 0;
-	while (i < options->len_for_array[0])
+	while (i < options->len_for_array[1])
 	{
 		free(options->dir_array[i]);
 		i++;
 	}
 	i = 0;
-	while (i < options->len_for_array[1])
+	while (i < options->len_for_array[0])
 	{
 		free(options->files_array[i]);
 		i++;
