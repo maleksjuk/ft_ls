@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 19:10:54 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/15 15:49:31 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 05:29:48 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,6 @@ void	init_options(t_options *options, int ac)
 		error_message("error malloc()", FULL_EXIT);
 	if (!(options->dir_array = (char **)malloc(sizeof(char *) * ac)))
 		error_message("error malloc()", FULL_EXIT);
-	i = -1;
-	while (++i < ac)
-	{
-		options->dir_array[i] = NULL;
-		options->files_array[i] = NULL;
-	}
 	options->len_for_array[0] = 0;
 	options->len_for_array[1] = 0;
 	options->flag = 0;
@@ -41,6 +35,7 @@ void	init_options(t_options *options, int ac)
 	options->list_files = 0;
 	options->count = 0;
 	options->flag_spec = 0;
+	options->bug_ls_for_recursion = 0;
 }
 
 int		input_options(t_options *options, char *params)

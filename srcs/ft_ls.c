@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/15 17:14:54 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 05:30:11 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,6 +113,7 @@ int	ft_ls(t_options *options)
 			if (options->len_for_array[1] > 1 || options->len_for_array[0])
 				ft_printf("%s%s:\n",  (i > 0 || options->len_for_array[0]) ?
 					"\n" : "", options->dir_array[i]);
+			options->bug_ls_for_recursion = i;
 			processing(options, options->dir_array[i]);
 			i += options->reverse ? 0 : 1;
 		}

@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:40 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/15 16:39:47 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 05:29:35 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct	s_options
 	char	cur_dir[MAX_PATH];
 	int		tab_len[7];
 	int		count;
+	int		bug_ls_for_recursion;
 }				t_options;
 
 typedef struct	s_info

@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/17 20:19:23 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/13 21:09:44 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 05:41:26 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,18 @@ t_info	*recursive_create_array(t_options *options, char *file)
 	return (list_rev);
 }
 
+void	bug_ls_for_recursion(t_options *options)
+{
+	int	i;
+
+	i = 0;
+	ft_printf("\n%s/", options->dir_array[options->bug_ls_for_recursion]);
+	while (options->cur_dir[i] != '/')
+		i++;
+	i++;
+	ft_printf("%s:\n", options->cur_dir + i);
+}
+
 int		recursive(t_options *options, char *file)
 {
 	char			*file_for_r;
@@ -152,8 +164,9 @@ int		recursive(t_options *options, char *file)
 	{
 		update_path(options, file);
 		set_path(options, list_rev[i].name);
-		ft_printf("\n%s:\n", options->cur_dir);
+		bug_ls_for_recursion(options);
 		file_for_r = ft_strdup(options->cur_dir);
+		options->count = 0;
 		processing(options, file_for_r);
 		free(file_for_r);
 		i++;

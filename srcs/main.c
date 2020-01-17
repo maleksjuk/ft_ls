@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:34 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/15 17:25:43 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 03:09:26 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,8 @@ int	main(int ac, char **av)
 			i++;
 		}
 	}
+	options->files_array[options->len_for_array[0]] = NULL;
+	options->dir_array[options->len_for_array[1]] = NULL;
 	sort_ascii(options->files_array, options->len_for_array[0]);
 	sort_ascii(options->dir_array, options->len_for_array[1]);
 	ft_ls(options);
