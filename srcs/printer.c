@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/06 17:34:35 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 08:38:25 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 14:03:34 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,9 @@ int		printing(t_info *list, t_options *options, int len)
 			if (options->list)
 				print_list(list, i, options);
 			else
-				ft_printf("%-*s", options->tab_len[6], list[i].name);
+				ft_printf("%s\n", list[i].name);
 		}
 		i++;
 	}
-	ft_printf("%s", options->list ? "" : "\n");
 	return (0);
 }
