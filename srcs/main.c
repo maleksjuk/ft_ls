@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/12 15:58:34 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 03:09:26 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 09:05:00 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,28 +36,47 @@ int	check_file(char *name)
 	struct stat	about;
 	struct stat	about_link;
 
-	// if (ft_strchr(name, '*'))
-	// 	return (3);
 	if (stat(name, &about))
 	{
 		error_message(name, 0);
 		return (2);
 	}
 	lstat(name, &about_link);
+	if (S_ISLNK(about_link.st_mode))
+		return (1);
 	if (S_ISDIR(about.st_mode))
-	{
-		if (S_ISLNK(about_link.st_mode))
-			return (1);
 		return (0);
-	}
 	return (1);
+}
+
+int	sort_args(int ac, char **av, t_options *options, int i)
+{
+	int	ret;
+
+	while (i < ac)
+	{
+		ret = check_file(av[i]);
+		if (ret == 1 || ret == 3)
+		{
+			if (!(options->files_array[options->len_for_array[0]++] =
+				ft_strdup(av[i])))
+				error_message("error malloc()", FULL_EXIT);
+		}
+		if (ret == 0 || ret == 3)
+		{
+			if (!(options->dir_array[options->len_for_array[1]++] =
+				ft_strdup(av[i])))
+				error_message("error malloc()", FULL_EXIT);
+		}
+		i++;
+	}
+	return (0);
 }
 
 int	main(int ac, char **av)
 {
 	t_options	*options;
 	int			i;
-	int			ret;
 
 	i = 1;
 	options = (t_options *)malloc(sizeof(t_options));
@@ -70,23 +89,7 @@ int	main(int ac, char **av)
 				return (usage(options));
 			i++;
 		}
-		while (i < ac)
-		{
-			ret = check_file(av[i]);
-			if (ret == 1 || ret == 3)
-			{
-				if (!(options->files_array[options->len_for_array[0]++] =
-					ft_strdup(av[i])))
-					error_message("error malloc()", FULL_EXIT);
-			}
-			if (ret == 0 || ret == 3)
-			{
-				if (!(options->dir_array[options->len_for_array[1]++] =
-					ft_strdup(av[i])))
-					error_message("error malloc()", FULL_EXIT);
-			}
-			i++;
-		}
+		sort_args(ac, av, options, i);
 	}
 	options->files_array[options->len_for_array[0]] = NULL;
 	options->dir_array[options->len_for_array[1]] = NULL;

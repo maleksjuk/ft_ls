@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/02 15:22:26 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 05:41:58 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 09:16:03 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	reading(t_info *list, char *file, t_options *options)
 		if (!list[i].flag_link)
 			add_path(options->cur_dir, dir_read->d_name);
 		reading_one_file(list, dir_read->d_name, options, i);
-		update_path(options, file);
+		update_path(options->cur_dir, file);
 		i++;
 		dir_read = readdir(dir);
 	}

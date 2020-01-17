@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/16 20:12:31 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 06:46:35 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 10:37:48 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,103 +34,70 @@ int	final_ls(t_options *options)
 	return (0);
 }
 
-int	free_list(t_info *list, int count)
+int	recursive(t_options *options, char *file)
 {
-	int	i;
+	char	*current_file;
+	t_info	*list_rev;
+	int		i;
 
+	list_rev = rec_create_array(options, file);
+	if (list_rev == NULL)
+		return (error_message(file, 0));
 	i = 0;
-	while (i < count)
+	while (i < list_rev[0].size)
 	{
-		free(list[i].name);
-		free(list[i].user);
-		free(list[i].group);
-		free(list[i].time_active);
-		free(list[i].time_create);
-		free(list[i].time_modif);
-		if (list[i].mode[0] == 'l')
-			free(list[i].path_link);
+		update_path(options->cur_dir, file);
+		set_path(options->cur_dir, list_rev[i].name);
+		rec_print_current_directory(options);
+		current_file = ft_strdup(options->cur_dir);
+		options->count = 0;
+		processing(options, current_file);
+		free(current_file);
 		i++;
 	}
-	free(list);
+	free_list(list_rev, i);
 	return (0);
 }
 
-int	processing(t_options *options, char *file)
+int	ft_ls_for_dir(t_options *options)
 {
-	t_info		*list;
-	struct stat	about;
-	int			count;
+	int	i;
 
-	if (!file)			//  обработка файлов
+	options->flag_current_process = 1;
+	i = options->reverse ? options->len_for_array[1] : 0;
+	while ((!options->reverse && i < options->len_for_array[1]) ||
+		(options->reverse && i > 0))
 	{
-		if ((list = set_info_list(options->len_for_array[0])) == NULL)
-			error_message("error malloc()", FULL_EXIT);
-		count = processing_files(options, list);
+		i -= options->reverse ? 1 : 0;
+		update_path(options->cur_dir, NULL);
+		add_path(options->cur_dir, options->dir_array[i]);
+		if (options->len_for_array[1] > 1 || options->len_for_array[0])
+			ft_printf("%s%s:\n", (i > 0 || options->len_for_array[0]) ?
+				"\n" : "", options->dir_array[i]);
+		options->bug_ls_for_recursion = i;
+		options->count = 0;
+		processing(options, options->dir_array[i]);
+		i += options->reverse ? 0 : 1;
 	}
-	else				//	обработка директорий
-	{
-		if (stat(file, &about))	// EACCES
-		{
-			error_message(file, 0);
-			if (errno == EACCES)
-				return (0);
-		}
-		if (S_ISDIR(about.st_mode))
-			if (!(about.st_mode & S_IXUSR))
-			{
-				count = 0;
-				list = NULL;
-				return (0);
-			}
-		if ((list = set_info_list(about.st_nlink)) == NULL)
-			error_message("error malloc()", FULL_EXIT);
-		count = processing_dir(options, list, file);
-	}
-	if (count < 0)
-		return (0);
-		// error_message("count", 1);
-	sort_info_list(list, count, options);
-	update_value_tab_len(options, list, count);
-	list[0].total = total_counter(list, count, options->all);
-	printing(list, options, count);
-	free_list(list, count);
-	if (file && options->recursive)
-		recursive(options, file);
 	return (0);
 }
 
 int	ft_ls(t_options *options)
 {
-	int	i;
-
-	if (options->len_for_array[0])		// обработка файлов
+	if (options->len_for_array[0])
 	{
 		options->flag_current_process = 0;
-		update_path(options, NULL);
+		update_path(options->cur_dir, NULL);
+		options->count = 0;
 		processing(options, NULL);
 	}
-	if (options->len_for_array[1])		// обработка директорий
-	{
-		options->flag_current_process = 1;
-		i = options->reverse ? options->len_for_array[1] : 0;
-		while ((!options->reverse && i < options->len_for_array[1]) ||
-			(options->reverse && i > 0))
-		{
-			i -= options->reverse ? 1 : 0;
-			update_path(options, NULL);
-			add_path(options->cur_dir, options->dir_array[i]);
-			if (options->len_for_array[1] > 1 || options->len_for_array[0])
-				ft_printf("%s%s:\n",  (i > 0 || options->len_for_array[0]) ?
-					"\n" : "", options->dir_array[i]);
-			options->bug_ls_for_recursion = i;
-			processing(options, options->dir_array[i]);
-			i += options->reverse ? 0 : 1;
-		}
-	}
-	if (!options->len_for_array[0] && !options->len_for_array[1])	// обработка без списка файлов и директорий
+	if (options->len_for_array[1])
+		ft_ls_for_dir(options);
+	if (!options->len_for_array[0] && !options->len_for_array[1])
 	{
 		options->flag_current_process = 2;
-		update_path(options, "./\0");
+		update_path(options->cur_dir, "./\0");
+		options->count = 0;
 		processing(options, "./\0");
 	}
 	return (final_ls(options));

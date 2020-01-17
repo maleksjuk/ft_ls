@@ -6,7 +6,7 @@
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/06 17:34:35 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 06:29:19 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 08:38:25 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	print_list(t_info *list, int i, t_options *options)
 	ft_printf("\n");
 }
 
-int	    printing(t_info *list, t_options *options, int len)
+int		printing(t_info *list, t_options *options, int len)
 {
 	int	i;
 

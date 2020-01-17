@@ -1,59 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   option_l.c                                         :+:      :+:    :+:   */
+/*   get_params.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: obanshee <obanshee@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/18 18:59:24 by obanshee          #+#    #+#             */
-/*   Updated: 2020/01/17 06:12:14 by obanshee         ###   ########.fr       */
+/*   Updated: 2020/01/17 10:50:07 by obanshee         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_ls.h"
-
-void	path_link(t_info *list, int i, char *file)
-{
-	char	*bufer;
-	int		bufsize;
-
-	list[i].mode[0] = 'l';
-	bufsize = 1024;
-	bufer = (char *)malloc(bufsize);
-	ft_memset(bufer, '\0', bufsize);
-	if (readlink(file, bufer, bufsize) > 0)
-	{
-		list[i].path_link = ft_strdup(bufer);
-		list[i].flag_link = 1;
-	}
-	free(bufer);
-}
-
-int		get_list_mode(t_info *list, int i, mode_t mode)
-{
-	list[i].mode[0] = S_ISSOCK(mode) ? 's' :
-		(S_ISLNK(mode) ? 'l' :
-		(S_ISBLK(mode) ? 'b' :
-		(S_ISDIR(mode) ? 'd' :
-		(S_ISCHR(mode) ? 'c' :
-		(S_ISFIFO(mode) ? 'p' :
-		'-')))));
-	list[i].mode[11] = '\0';
-	list[i].mode[1] = mode & S_IRUSR ? 'r' : '-';
-	list[i].mode[2] = mode & S_IWUSR ? 'w' : '-';
-	list[i].mode[3] = (mode & S_ISUID) && (mode & S_IXUSR) ? 's' :
-		(mode & S_ISUID ? 'S' : (mode & S_IXUSR ? 'x' : '-'));
-	list[i].mode[4] = mode & S_IRGRP ? 'r' : '-';
-	list[i].mode[5] = mode & S_IWGRP ? 'w' : '-';
-	list[i].mode[6] = (mode & S_ISGID) && (mode & S_IXGRP) ? 's' :
-		(mode & S_ISGID ? 'S' : (mode & S_IXGRP ? 'x' : '-'));
-	list[i].mode[7] = mode & S_IROTH ? 'r' : '-';
-	list[i].mode[8] = mode & S_IWOTH ? 'w' : '-';
-	list[i].mode[9] = (mode & S_ISVTX) && (mode & S_IXOTH) ? 't' :
-		(mode & S_ISVTX ? 'T' : (mode & S_IXOTH ? 'x' : '-'));
-	list[i].mode[10] = ' ';
-	return (0);
-}
 
 char	*set_format_date(char *date, long time_digit)
 {
@@ -148,11 +105,7 @@ int		get_list_params(char *file, t_info *list, int i)
 	else
 	{
 		if (stat(file, &about_file))
-		{
-			ft_printf("GLP ");	// DELETE
 			return (error_message(file, (errno == EACCES) ? 0 : FULL_EXIT));
-			// return (1);
-		}
 		get_all_params(list, i, &about_file, NULL);
 	}
 	return (0);
